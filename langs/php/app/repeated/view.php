@@ -1,0 +1,1 @@
+<%- input.views[viewIdx].code %>

@@ -1,0 +1,3 @@
+def <%- route %>
+<%- body %>
+end

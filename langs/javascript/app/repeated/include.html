@@ -1,0 +1,16 @@
+<% if (options.data) { -%>
+  <div id="<%- options.data.action %>-result"></div>
+<% } -%>
+<%- '<\%' %>
+<% if (options.data) { -%>
+    <%- options.data.action %>({
+<%   for (var answer in options.data.answers) { -%>
+       <%- answer %>: <%- options.data.answers[answer] %>,
+<%   } -%>
+    }, function(result) {
+      $('#<%- options.data.action %>-result').replaceWith(<%- view %>View({result: result}))
+    })
+<% } else { -%>
+    print(<%- view %>View({result: <%- options.result || 'result' %>}));
+<% } -%>
+<%- '%\>' %>
