@@ -1,0 +1,11 @@
+<% if(result.foo) { %>
+  <p>foo</p>
+<% } %>
+<% if(!result.foo) { %>
+  <p>bar</p>
+<% } %>
+<% result.forEach(function(l, index) { %>
+  <% if(index != 2) { %>
+    <h2><%= index %>. <%= l.label %></h2>
+  <% } %>
+<% }); %>

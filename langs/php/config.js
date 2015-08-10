@@ -23,13 +23,8 @@ PHP.join = function(variable, on) {
 }
 
 PHP.returnCode = function(input) {
-  var ret = '';
-  if (input.clientLanguage === 'html-php') {
-    var assign = '$result = (object)' + input.ret + ';\n';
-    ret = assign + PHP.redirect({redirectPath: input.clientFile + input.clientExtension}) + ";";
-  } else {
-    ret = 'echo json_encode(' + input.ret + ');';
-  }
+  var assign = '$result = (object)' + input.ret + ';\n';
+  ret = assign + PHP.redirect({redirectPath: input.clientFile + '.php'}) + ";";
   return Utils.addIndent(ret, input.tabs);
 }
 
