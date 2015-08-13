@@ -41,12 +41,13 @@ Node.app = {
     if (options.data) {
       code = EJS.render(Node.app.includeTmpl, {view: view, options: options});
     } else {
-      if (options.result) code += '<% result = ' + options.result + '; -%>\n';
+      if (options.result && options.result !== 'result') code += '<% result = ' + options.result + '; -%>\n';
       code += '<% include ' + view + ' -%>';
     }
     return Utils.shift(code, options.indent);
   }
 };
+
 Node.app.build = function(input, lucy, callback) {
   var files = [];
   var ejsInput = {

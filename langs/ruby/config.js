@@ -1,3 +1,6 @@
+var Path = require('path');
+var FS = require('fs');
+var EJS = require('ejs');
 var Utils = require('../utils.js');
 var readTmpl = Utils.readTmplFunc(__dirname, '.rb');
 
@@ -19,12 +22,8 @@ Ruby.join = function(variable, on) {
 
 Ruby.returnCode = function(input) {
   var ret;
-  if (input.clientLanguage === 'html-erb') {
-    ret = input.ret === '@result' ? '' : '@result = ' + input.ret + '\n'
-    ret += 'render "' + input.clientFile + '"';
-  } else {
-    ret = "render :json => " + input.ret;
-  }
+  ret = input.ret === 'result' ? '' : 'result = ' + input.ret + '\n'
+  ret += 'render "' + input.clientFile + '"';
   return Utils.addIndent(ret, input.tabs);
 }
 
@@ -85,27 +84,112 @@ Ruby.variable = function(v) {
     }
   })
 }
+Ruby.displayVariable = function(v) {
+  return "<%= " + Ruby.variable(v) + " %>";
+}
+Ruby.variableJS = function(v) {
+  return "<%= " + Ruby.jsonEncode(Ruby.variable(v)) + " %>"; 
+}
+
+Ruby.result = function(input) {
+  var ret = '@' + Ruby.variable(input.str);
+  return ret;
+}
 
 Ruby.cond = function(cond) {
   return cond;
 }
 
 Ruby.for = function(cond) {
-  return cond.group + ".each_index do | index | " + cond.iterator + " = " + cond.group + "[index]"
+  return '<% ' + cond.group + ".each_index do | index | " + cond.iterator + " = " + cond.group + "[index]" + ' %>'
 }
 
 Ruby.rof = function(cond) {
-  return "end";
+  return '<% end %>';
 }
 
 Ruby.if = function(cond) {
-  return "if " + Ruby.cond(cond);
+  return '<% if ' + Ruby.cond(cond) + ' %>';
 }
 
 Ruby.fi = function(cond) {
-  return "end"
+  return '<% end %>';
 }
 
 Ruby.jsonEncode = function(codeStr) {
   return codeStr + ".to_json";
+}
+
+Ruby.app = {
+  copyFiles: [],
+  routesTmpl: readTmpl('../app/static/routes'),
+  controllerTmpl: readTmpl('../app/static/main_controller'),
+  indexTmpl: FS.readFileSync(__dirname + '/app/static/index.html', 'utf8'),
+  includeTmpl: FS.readFileSync(__dirname + '/app/repeated/include.html', 'utf8'),
+  includeView: function(view, options) {
+    code = EJS.render(Ruby.app.includeTmpl, {view: view, options: options});
+    return Utils.shift(code, options.indent);
+  }
+}
+
+var addCopyFiles = function(baseDir, subDir) {
+  subDir = subDir || '';
+  var workingDir = Path.join(baseDir, subDir);
+  var files = FS.readdirSync(workingDir);
+  files.forEach(function(f) {
+    var filename = Path.join(subDir, f);
+    if (FS.statSync(Path.join(baseDir, filename)).isDirectory()) {
+      Ruby.app.copyFiles.push({filename: filename, directory: true});
+      addCopyFiles(baseDir, filename);
+    } else {
+      Ruby.app.copyFiles.push({
+        filename: filename,
+        contents: FS.readFileSync(Path.join(baseDir, filename), 'utf8')
+      });
+    }
+  });
+}
+
+addCopyFiles(__dirname + '/app/copy');
+
+Ruby.app.build = function(input, lucy, callback) {
+  var files = JSON.parse(JSON.stringify(Ruby.app.copyFiles));
+  var ejsInput = {
+    Lucy: lucy,
+    input: input,
+    shift: Utils.shift,
+  }
+  var controllerFile = {
+    contents: EJS.render(Ruby.app.controllerTmpl, ejsInput),
+    filename: 'app/controllers/main_controller.rb',
+    snippets: {},
+  }
+  input.actions.forEach(function(a) {
+    controllerFile.snippets[a.name] = a.code;
+  });
+  files.push(controllerFile);
+
+  input.views.forEach(function(v) {
+    var viewFile = {
+      filename: 'app/views/main/' + v.name + '.html.erb',
+      contents: v.code,
+      snippets: {},
+    };
+    viewFile.snippets[v.name] = v.code;
+    files.push(viewFile);
+  });
+
+  var routeFile = {
+    contents: EJS.render(Ruby.app.routesTmpl, ejsInput),
+    filename: 'config/routes.rb'
+  }
+  files.push(routeFile);
+
+  var index = {
+    contents: EJS.render(Ruby.app.indexTmpl, ejsInput),
+    filename: 'app/views/main/index.html.erb',
+  };
+  files.push(index);
+
+  callback(null, files);
 }

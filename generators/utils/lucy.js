@@ -54,7 +54,7 @@ Lucy.prototype.resolveVariable = function(varStr, varFunc) {
   } else if (varStr.indexOf('result.') === 0 || varStr === 'result') {
     varStr = varStr.replace('result', self.result());
     if (lang.result) {
-      return lang.result({str: varStr, display: varFunc ? true : false});
+      return lang.result({str: varFunc(varStr)});
     } else {
       return varFunc(varStr);
     }

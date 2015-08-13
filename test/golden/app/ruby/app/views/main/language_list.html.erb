@@ -1,0 +1,11 @@
+<% if @result %>
+  <p>foo</p>
+<% end %>
+<% if !@result %>
+  <p>bar</p>
+<% end %>
+<% @result.each_index do | index | l = @result[index] %>
+  <% if index != 2 %>
+    <h2><%= index %>. <%= l["label"] %></h2>
+  <% end %>
+<% end %>
