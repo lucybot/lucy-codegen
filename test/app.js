@@ -1,7 +1,8 @@
 var FS = require('fs');
 var Path = require('path');
 var Mkdirp = require('mkdirp');
-var Rmdir = require('rimraf')
+var Rmdir = require('rimraf');
+var Expect = require('chai').expect;
 
 var App = require('../generators/app.js');
 var Langs = require('../langs/langs.js');
@@ -69,9 +70,9 @@ describe('App Builder', function() {
         var dirs = files.filter(function(f) { return f.directory });
         files = files.filter(function(f) {return !f.directory});
         var outputDir = Path.join(__dirname, 'golden/app', lang);
-        if (FS.existsSync(outputDir)) Rmdir.sync(outputDir);
-        Mkdirp.sync(outputDir);
         if (process.env.WRITE_GOLDEN) {
+          if (FS.existsSync(outputDir)) Rmdir.sync(outputDir);
+          Mkdirp.sync(outputDir);
           dirs.forEach(function(dir) {
             var filename = Path.join(outputDir, dir.filename);
             if (!FS.existsSync(filename)) Mkdirp.sync(Path.join(outputDir, dir.filename));
@@ -82,7 +83,7 @@ describe('App Builder', function() {
           });
         } else {
           files.forEach(function(file) {
-            var golden = FS.readFileSync(Path.join(outputDir, file.filename));
+            var golden = FS.readFileSync(Path.join(outputDir, file.filename), 'utf8');
             Expect(file.contents).to.equal(golden);
           })
         }
