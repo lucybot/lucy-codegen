@@ -14,6 +14,5 @@ class MainController < ApplicationController
     @result = JSON.parse(http.request(request).body)
     result = @result
     render "language_list"
-
   end
 end

@@ -169,6 +169,10 @@ Ruby.app.build = function(input, lucy, callback) {
   });
   files.push(controllerFile);
 
+  files.push({
+    filename: 'app/views/main',
+    directory: true,
+  })
   input.views.forEach(function(v) {
     var viewFile = {
       filename: 'app/views/main/' + v.name + '.html.erb',

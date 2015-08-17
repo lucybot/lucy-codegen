@@ -24,7 +24,6 @@ app.post('/get_languages', function(req, res) {
     body = JSON.parse(body);
     res.render('language_list', {request: req.body, result: body})
   })
-
 });
 
 app.listen(process.env.PORT || 3333);

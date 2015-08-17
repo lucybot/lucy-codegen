@@ -11,5 +11,4 @@ curl_setopt($curl, CURLOPT_URL,
 $result = json_decode(curl_exec($curl));
 $result = (object)$result;
 require 'language_list.php';
-
 ?>

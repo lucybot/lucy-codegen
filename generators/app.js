@@ -43,7 +43,7 @@ App.build = function(options, callback) {
       try {
         var view = {
           name: viewName,
-          code: EJS.render(ejs, {Lucy: lucy})
+          code: EJS.render(ejs, {Lucy: lucy}).trim(),
         };
       } catch (e) {
         console.log(ejs);
@@ -66,7 +66,7 @@ App.build = function(options, callback) {
       try {
         action = {
           name: actionName,
-          code: EJS.render(ejs, {Lucy: lucy}),
+          code: EJS.render(ejs, {Lucy: lucy}).trim(),
           forceServer: action.forceServer,
         }
       } catch (e) {
