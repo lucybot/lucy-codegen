@@ -21,7 +21,7 @@ describe('Variables', function() {
     node: 'foo.bar[3].baz',
     javascript: 'foo.bar[3].baz',
     php: '$foo->bar[3]->baz',
-    ruby: 'foo["bar"][3]["baz"]',
+    ruby: 'foo.bar[3].baz',
   }];
   testAllLangs(variables, 'variable');
 });

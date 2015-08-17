@@ -54,10 +54,10 @@ Lucy.prototype.resolveVariable = function(varStr, varFunc) {
   } else if (varStr.indexOf('result.') === 0 || varStr === 'result') {
     varStr = varStr.replace('result', self.result());
     if (lang.result) {
-      return lang.result({str: varFunc(varStr)});
-    } else {
-      return varFunc(varStr);
+      varStr = lang.result({str: varStr});
     }
+    var ret = varFunc(varStr);
+    return ret;
   } else if (varStr.indexOf('answers.') === 0) {
     var question = varStr.substring(8);
     var variable = self.answers.getAnswerIfValid(question);

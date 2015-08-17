@@ -37,7 +37,7 @@ Utils.formatVariable = function(str, funcs) {
   var pieces = str.split('.');
   var ret = '';
   for (var i = 0; i < pieces.length; ++i) {
-    var arrayMatch = pieces[i].match(/(\w+)(\[(\d+)\])?/);
+    var arrayMatch = pieces[i].match(/(.?\w+)(\[(\d+)\])?/);
     if (!ret) ret += funcs.varName(arrayMatch[1]);
     else ret = funcs.hashIndex(ret, arrayMatch[1]);
     if (arrayMatch[3]) {

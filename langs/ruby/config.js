@@ -21,9 +21,7 @@ Ruby.join = function(variable, on) {
 }
 
 Ruby.returnCode = function(input) {
-  var ret;
-  ret = input.ret === 'result' ? '' : 'result = ' + input.ret + '\n'
-  ret += 'render "' + input.clientFile + '"';
+  var ret = 'render :template => "main/' + Ruby.app.getPartialFromViewName(input.clientFile) + '", :locals => {:result => ' + input.ret + '}';
   return Utils.addIndent(ret, input.tabs);
 }
 
@@ -80,7 +78,7 @@ Ruby.variable = function(v) {
       return varName + '[' + num + ']';
     },
     hashIndex: function(varName, key) {
-      return varName + '["' + key + '"]';
+      return varName + '.' + key;
     }
   })
 }
@@ -91,17 +89,12 @@ Ruby.variableJS = function(v) {
   return "<%= " + Ruby.jsonEncode(Ruby.variable(v)) + " %>"; 
 }
 
-Ruby.result = function(input) {
-  var ret = '@' + Ruby.variable(input.str);
-  return ret;
-}
-
 Ruby.cond = function(cond) {
   return cond;
 }
 
 Ruby.for = function(cond) {
-  return '<% ' + cond.group + ".each_index do | index | " + cond.iterator + " = " + cond.group + "[index]" + ' %>'
+  return '<% ' + cond.group + ".each_index do | index | " + cond.iterator + " = " + cond.group + ".fetch(index)" + ' %>'
 }
 
 Ruby.rof = function(cond) {
@@ -126,8 +119,19 @@ Ruby.app = {
   controllerTmpl: readTmpl('../app/static/main_controller'),
   indexTmpl: FS.readFileSync(__dirname + '/app/static/index.html', 'utf8'),
   includeTmpl: FS.readFileSync(__dirname + '/app/repeated/include.html', 'utf8'),
+  getPartialFromViewName: function(v) {
+    return v.replace(/[A-Z][a-z]/g, function(whole) {
+      return '_' + whole.toLowerCase();
+    });
+  },
   includeView: function(view, options) {
-    code = EJS.render(Ruby.app.includeTmpl, {view: view, options: options});
+    var code = ''
+    if (options.data) {
+      code = EJS.render(Ruby.app.includeTmpl, {view: view, options: options});
+    } else {
+      var resultStr = options.result ? ', :result => ' + options.result : '';
+      code += '<%= render "' + Ruby.app.getPartialFromViewName(view).substring(1) + '.html.erb"' + resultStr + ' %>';
+    }
     return Utils.shift(code, options.indent);
   }
 }
@@ -174,8 +178,9 @@ Ruby.app.build = function(input, lucy, callback) {
     directory: true,
   })
   input.views.forEach(function(v) {
+    var partialName = Ruby.app.getPartialFromViewName(v.name);
     var viewFile = {
-      filename: 'app/views/main/' + v.name + '.html.erb',
+      filename: 'app/views/main/' + partialName + '.html.erb',
       contents: v.code,
       snippets: {},
     };
