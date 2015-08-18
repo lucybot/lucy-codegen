@@ -119,6 +119,7 @@ Ruby.app = {
   controllerTmpl: readTmpl('../app/static/main_controller'),
   indexTmpl: FS.readFileSync(__dirname + '/app/static/index.html', 'utf8'),
   includeTmpl: FS.readFileSync(__dirname + '/app/repeated/include.html', 'utf8'),
+  gemfile: FS.readFileSync(__dirname + '/app/static/Gemfile', 'utf8'),
   getPartialFromViewName: function(v) {
     return v.replace(/[A-Z][a-z]/g, function(whole) {
       return '_' + whole.toLowerCase();
@@ -199,6 +200,12 @@ Ruby.app.build = function(input, lucy, callback) {
     filename: 'app/views/main/index.html.erb',
   };
   files.push(index);
+
+  var gemfile = {
+    contents: EJS.render(Ruby.app.gemfile, ejsInput),
+    filename: 'Gemfile'
+  }
+  files.push(gemfile);
 
   callback(null, files);
 }
