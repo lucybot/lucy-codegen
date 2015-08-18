@@ -149,7 +149,8 @@ var addCopyFiles = function(baseDir, subDir) {
     } else {
       Ruby.app.copyFiles.push({
         filename: filename,
-        contents: FS.readFileSync(Path.join(baseDir, filename), 'utf8')
+        contents: FS.readFileSync(Path.join(baseDir, filename), 'utf8'),
+        hidden: true,
       });
     }
   });
@@ -172,6 +173,7 @@ Ruby.app.build = function(input, lucy, callback) {
   input.actions.forEach(function(a) {
     controllerFile.snippets[a.name] = a.code;
   });
+  if (input.setup) controllerFile.snippets.setup = input.setup.code;
   files.push(controllerFile);
 
   files.push({
@@ -203,7 +205,8 @@ Ruby.app.build = function(input, lucy, callback) {
 
   var gemfile = {
     contents: EJS.render(Ruby.app.gemfile, ejsInput),
-    filename: 'Gemfile'
+    filename: 'Gemfile',
+    hidden: true,
   }
   files.push(gemfile);
 
