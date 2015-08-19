@@ -86,7 +86,7 @@ Ruby.displayVariable = function(v) {
   return "<%= " + Ruby.variable(v) + " %>";
 }
 Ruby.variableJS = function(v) {
-  return "<%= " + Ruby.jsonEncode(Ruby.variable(v)) + " %>"; 
+  return "<%== " + Ruby.jsonEncode(Ruby.variable(v)) + " %>"; 
 }
 
 Ruby.cond = function(cond) {
