@@ -1,7 +1,6 @@
 var Path = require('path');
 var FS = require('fs');
 var Utils = require('../utils.js');
-var readTmpl = Utils.readTmplFunc(__dirname, '.rb');
 
 var Ruby = module.exports = {
     name: 'ruby',
@@ -16,14 +15,7 @@ var Ruby = module.exports = {
     }
 };
 
-Ruby.setOptions = function(opts) {
-  opts = opts || {};
-  for (key in Ruby.options) {
-    if (opts[key] !== undefined) Ruby.options[key].value = opts[key];
-    else Ruby.options[key].value = Ruby.options[key].default;
-  }
-}
-Ruby.setOptions();
+Utils.initializeLanguage(Ruby);
 
 Ruby.literal = function(v, numSpaces, shallow) {
   numSpaces = numSpaces || 0;
@@ -121,9 +113,3 @@ Ruby.returnCode = function(input) {
 Ruby.userInput = function(input) {
   return 'request[:' + input.question + ']';
 }
-
-Ruby.request = {
-  template: FS.readFileSync(__dirname + '/tmpl/request.ejs.rb', 'utf8'),
-}
-
-Ruby.app = require('./app/app.js');

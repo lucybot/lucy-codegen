@@ -1,4 +1,5 @@
 var Path = require('path');
+var EJS = require('ejs');
 
 var LUtils = require('../../langs/utils.js');
 var AnswerSet = require('./answer-set.js');
@@ -180,7 +181,7 @@ Lucy.prototype.request = function(options) {
   } else {
     options.headers = self.language.literal(options.headers, 0, true);
   }
-  return LUtils.resolveValue(lang.request, {
+  return EJS.render(lang.templates.request, {
       req: options,
       shift: LUtils.shift,
       returnCode: self.returnCode

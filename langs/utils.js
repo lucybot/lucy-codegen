@@ -1,3 +1,4 @@
+var Path = require('path');
 var FS = require('fs');
 var EJS = require('ejs');
 
@@ -25,12 +26,6 @@ Utils.camelCase = function(input) {
          .replace(/[^\w\s-]/g, '')
          .replace(/[-\s]+(.)/g, function(match, group1) {return group1.toUpperCase()});
   return ret;
-}
-
-Utils.readTmplFunc = function(dirname, extension) {
-  return function(name) {
-    return FS.readFileSync(dirname + '/tmpl/' + name + '.ejs' + extension, {encoding: 'utf8'});
-  }
 }
 
 Utils.formatVariable = function(str, funcs) {
@@ -127,4 +122,27 @@ Utils.getKeysAsLiterals = function(obj, keys, lang) {
     code[key] = lang.literal(obj[key]);
   })
   return code;
+}
+
+Utils.initializeLanguage = function(language) {
+  language.templates = language.templates || {};
+  var dir = Path.join(__dirname, language.name, 'tmpl');
+  FS.readdirSync(dir).forEach(function(f) {
+    var extLoc = f.indexOf('.');
+    if (extLoc === -1) extLoc = f.length;
+    var name = f.substring(0, extLoc);
+    language.templates[name] = FS.readFileSync(Path.join(dir, f), 'utf8');
+  });
+
+  language.options = language.options || {};
+  language.setOptions = function(opts) {
+    opts = opts || {};
+    for (key in language.options) {
+      if (opts[key] !== undefined) language.options[key].value = opts[key];
+      else language.options[key].value = language.options[key].default;
+    }
+  }
+  language.setOptions();
+
+  language.app = require('./' + language.name + '/app/app.js');
 }

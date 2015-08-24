@@ -8,6 +8,7 @@ var JS = module.exports = {
     extension: '.js',
     nulltype: 'null',
 }
+Utils.initializeLanguage(JS);
 
 JS.comment = function(str) { return '// ' + str }
 
@@ -92,9 +93,3 @@ JS.html.variable = function(v) {
   return '<%= ' + JS.variable(v) + ' %>';
 }
 JS.html.variableJS = JS.variable;
-
-JS.request = {
-  template: FS.readFileSync(__dirname + '/tmpl/request.ejs.js', 'utf8')
-}
-
-JS.app = require('./app/app.js');

@@ -1,12 +1,14 @@
 var FS = require('fs');
 var DeepExtend = require('deep-extend');
 
+var Utils = require('../utils.js');
 var JS = require('../javascript/config.js');
 
 var Node = module.exports = DeepExtend({}, JS);
-
 Node.name = 'node';
 Node.label = 'NodeJS';
+
+Utils.initializeLanguage(Node);
 
 Node.html.variableJS = function(v) {
   return '<%- JSON.stringify(' + Node.variable(v) + ') %>'
@@ -18,13 +20,6 @@ Node.userInput = function(input) {
   return 'req.body.' + input.question;
 }
 
-Node.request = {
-  template: FS.readFileSync(__dirname + '/tmpl/request.ejs.js', 'utf8'),
-  setup: 'var request = require(\'request\');',
-}
-
 Node.redirect = function(input) {
   return "res.redirect('" + input.redirectPath + "')";
 }
-
-Node.app = require('./app/app.js');

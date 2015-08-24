@@ -1,7 +1,7 @@
 var Utils = require('../utils.js');
 var FS = require('fs');
 
-var PHP = {
+var PHP = module.exports = {
     name: 'php',
     label: 'PHP',
     extension: '.php',
@@ -9,11 +9,7 @@ var PHP = {
     nulltype: 'null',
 };
 
-module.exports = PHP;
-
-PHP.redirect = function(input) {
-  return "require '" + input.redirectPath + "'"
-}
+Utils.initializeLanguage(PHP);
 
 PHP.literal = function(v, numSpaces, shallow) {
   numSpaces = numSpaces || 0;
@@ -90,10 +86,6 @@ PHP.returnCode = function(input) {
 PHP.userInput = function(input) {
   return '$_POST["' + input.question + '"]';
 }
-
-PHP.request = {
-  template: FS.readFileSync(__dirname + '/tmpl/request.ejs.php', 'utf8'),
+PHP.redirect = function(input) {
+  return "require '" + input.redirectPath + "'"
 }
-
-
-PHP.app = require('./app/app.js');
