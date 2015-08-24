@@ -1,6 +1,5 @@
 var Path = require('path');
 var FS = require('fs');
-var EJS = require('ejs');
 var Utils = require('../utils.js');
 var readTmpl = Utils.readTmplFunc(__dirname, '.rb');
 
@@ -124,7 +123,7 @@ Ruby.userInput = function(input) {
 }
 
 Ruby.request = {
-  template: readTmpl('request')
+  template: FS.readFileSync(__dirname + '/tmpl/request.ejs.rb', 'utf8'),
 }
 
 Ruby.app = require('./app/app.js');

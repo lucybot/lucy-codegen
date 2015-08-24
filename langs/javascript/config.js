@@ -2,8 +2,6 @@ var FS = require('fs');
 
 var Utils = require('../utils.js');
 
-var readTmpl = Utils.readTmplFunc(__dirname, '.js');
-
 var JS = module.exports = {
     name: 'javascript',
     label: 'JavaScript',
@@ -96,7 +94,7 @@ JS.html.variable = function(v) {
 JS.html.variableJS = JS.variable;
 
 JS.request = {
-  template: readTmpl('request')
+  template: FS.readFileSync(__dirname + '/tmpl/request.ejs.js', 'utf8')
 }
 
 JS.app = require('./app/app.js');

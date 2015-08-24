@@ -1,6 +1,5 @@
 var Utils = require('../utils.js');
 var FS = require('fs');
-var EJS = require('ejs');
 
 var PHP = {
     name: 'php',
@@ -11,8 +10,6 @@ var PHP = {
 };
 
 module.exports = PHP;
-
-var readTmpl = Utils.readTmplFunc(__dirname, '.php');
 
 PHP.redirect = function(input) {
   return "require '" + input.redirectPath + "'"
@@ -95,7 +92,7 @@ PHP.userInput = function(input) {
 }
 
 PHP.request = {
-  template: readTmpl('request')
+  template: FS.readFileSync(__dirname + '/tmpl/request.ejs.php', 'utf8'),
 }
 
 
