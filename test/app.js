@@ -1,9 +1,7 @@
-var FS = require('fs');
 var Path = require('path');
-var Mkdirp = require('mkdirp');
-var Rmdir = require('rimraf');
 var Expect = require('chai').expect;
 
+var TestUtils = require('./utils.js');
 var App = require('../generators/app.js');
 var Langs = require('../langs/langs.js');
 
@@ -63,30 +61,9 @@ describe('App Builder', function() {
     }
     it('should build code for ' + lang, function() {
       App.build(opts, function(err, files) {
-        if (err) {
-          console.log(err);
-          throw err;
-        }
-        var dirs = files.filter(function(f) { return f.directory });
-        files = files.filter(function(f) {return !f.directory});
+        Expect(err).to.equal(null);
         var outputDir = Path.join(__dirname, 'golden/app', lang);
-        if (process.env.WRITE_GOLDEN) {
-          if (FS.existsSync(outputDir)) Rmdir.sync(outputDir);
-          Mkdirp.sync(outputDir);
-          dirs.forEach(function(dir) {
-            var filename = Path.join(outputDir, dir.filename);
-            if (!FS.existsSync(filename)) Mkdirp.sync(Path.join(outputDir, dir.filename));
-          });
-          files.forEach(function(file) {
-            console.log('WRITING: ' + file.filename);
-            FS.writeFileSync(Path.join(outputDir, file.filename), file.contents);
-          });
-        } else {
-          files.forEach(function(file) {
-            var golden = FS.readFileSync(Path.join(outputDir, file.filename), 'utf8');
-            Expect(file.contents).to.equal(golden);
-          })
-        }
+        TestUtils.checkGoldenFiles(outputDir, files);
       });
     });
   });
