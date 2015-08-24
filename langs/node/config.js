@@ -1,12 +1,13 @@
 var FS = require('fs');
 var Util = require('util');
 var EJS = require('ejs');
+var DeepExtend = require('deep-extend');
 
 var JS = require('../javascript/config.js');
 var Utils = require('../utils.js');
 var readTmpl = Utils.readTmplFunc(__dirname, '.js');
 
-var Node = module.exports = Util._extend({}, JS);
+var Node = module.exports = DeepExtend({}, JS);
 
 Node.name = 'node';
 Node.label = 'NodeJS';

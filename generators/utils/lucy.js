@@ -116,7 +116,7 @@ Lucy.prototype.include = function(view, options) {
         options.data.answers[q] = self.language.literal(answer);
         answer = {val: answer};
       } else if (answer.variable) {
-        options.data.answers[q] = self.resolveVariable(answer.variable, self.language.variableJS);
+        options.data.answers[q] = self.resolveVariable(answer.variable, self.language.html.variableJS);
         answer = {serverInput: true}
       }
       self.answers.addAnswer(q, answer);
