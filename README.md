@@ -21,7 +21,7 @@ Each generator takes in a language and generates sample code for achieving some 
 * App: Generates code for serving a Single Page Application
 
 ### Languages
-Languages are described in the ```langs/``` directory. Each language is expected to implement certain fields and functions. For instance, JavaScript has the following implementation:
+Languages are described in the ```langs/``` directory. Each language is expected to implement certain fields and functions for generating code in that language. For instance, JavaScript has the following implementation:
 
 ```js
 var JS = {
