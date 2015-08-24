@@ -25,11 +25,11 @@ Lucy.prototype.literal = function(obj) {
 }
 
 Lucy.prototype.variableJS = function(varStr) {
-  return self.resolveVariable(varStr);
+  return self.resolveVariable(varStr, self.language.html.variableJS);
 }
 
 Lucy.prototype.variable = function(varStr) {
-  return self.resolveVariable(varStr, self.language.displayVariable);
+  return self.resolveVariable(varStr, self.language.html.variable);
 }
 
 Lucy.prototype.join = function(toJoin, on) {
@@ -79,21 +79,21 @@ Lucy.prototype.for = function(iter) {
   iter = LUtils.parseIterator(iter);
   iter.iterator = self.resolveVariable(iter.iterator);
   iter.group = self.resolveVariable(iter.group);
-  return self.language.for(iter);
+  return self.language.html.for(iter);
 }
 
 Lucy.prototype.rof = function(iter) {
-  return self.language.rof(iter);
+  return self.language.html.rof(iter);
 }
 
 Lucy.prototype.if = function(cond) {
   cond = LUtils.parseCond(cond);
   cond = LUtils.replaceVars(cond, self.resolveVariable);
-  return self.language.if(cond);
+  return self.language.html.if(cond);
 }
 
 Lucy.prototype.fi = function(cond) {
-  return self.language.fi(cond);
+  return self.language.html.fi(cond);
 }
 
 Lucy.prototype.answer = function(question) {
