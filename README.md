@@ -15,10 +15,12 @@ A library for auto-generating source code in different programming languages. Us
 ## Project Overview
 
 ### Generators
-Each generator takes in a language and generates sample code for achieving some goal in that language
+Generators are contained in the ```generators/``` directory. Each generator takes in a language and generates sample code for achieving some goal in that language:
 
 * Request: Generates code for making an HTTP request
 * App: Generates code for serving a Single Page Application
+
+You can see samples of the generated code [in the test/golden directory](/test/golden)
 
 ### Languages
 Languages are described in the ```langs/``` directory. Each language is expected to implement certain fields and functions for generating code in that language. For instance, JavaScript has the following implementation:
