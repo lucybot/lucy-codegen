@@ -1,18 +1,17 @@
 var FS = require('fs');
-var Render = require('ejs').render;
 
 var Utils = require('../utils.js');
-
-var readTmpl = Utils.readTmplFunc(__dirname, '.js');
 
 var JS = module.exports = {
     name: 'javascript',
     label: 'JavaScript',
     extension: '.js',
+    nulltype: 'null',
 }
+Utils.initializeLanguage(JS);
 
 JS.comment = function(str) { return '// ' + str }
-JS.nulltype = 'null'
+
 JS.literal = function(v, numSpaces, shallow) {
       numSpaces = numSpaces || 0;
       var spaces = Array(numSpaces + 1).join(' ');
@@ -49,8 +48,17 @@ JS.literal = function(v, numSpaces, shallow) {
       }
 }
 
-JS.returnCode = function(input) {
-  return Utils.addIndent('callback(' + input.ret + ')', input.tabs);
+JS.for = function(iter) {
+  return iter.group + '.forEach(function(' + iter.iterator + ', index) {';
+}
+JS.rof = function(iter) {
+  return '});'
+}
+JS.if = function(cond) {
+  return 'if(' + cond +') {'
+}
+JS.fi = function(cond) {
+  return '}'
 }
 JS.variable = function(v) {
   return v;
@@ -64,72 +72,24 @@ JS.join = function(variable, on) {
 JS.jsonEncode = function(input) {
   return "JSON.stringify(" + input + ")";
 }
-
-JS.for = function(iter) {
-  return '<% ' + iter.group + '.forEach(function(' + iter.iterator + ', index) { %>';
+JS.returnCode = function(input) {
+  return Utils.addIndent('callback(' + input.ret + ')', input.tabs);
 }
-JS.rof = function(iter) {
-  return '<% }); %>'
-}
-JS.if = function(cond) {
-  return '<% if(' + cond +') { %>'
-}
-JS.fi = function(cond) {
-  return '<% } %>'
-}
-
-JS.variable = function(v) {
-  return v;
-}
-JS.displayVariable = function(v) {
-  return "<%= " + v + " %>";
-}
-JS.variableJS = JS.variable;
-
 JS.userInput = function(input) {
   return "request." + input.question;
 }
 
-JS.request = {
-  template: readTmpl('request')
-}
-
-JS.app = {
-  pageTmpl: FS.readFileSync(__dirname + '/app/static/index.html', 'utf8'),
-  includeTmpl: FS.readFileSync(__dirname + '/app/repeated/include.html', 'utf8'),
-  includeView: function(view, options) {
-    var code = Render(JS.app.includeTmpl, {view: view, options: options});
-    return Utils.shift(code, options.indent);
+JS.html = {};
+var formatForClient = function(func) {
+  return function(input) {
+    return '<% ' + func(input) + ' %>';
   }
 }
-
-JS.app.build = function(input, lucy, callback) {
-  var serverActions = input.actions.filter(function(a) {return a.forceServer});
-  input.actions = input.actions.filter(function(a) {return !a.forceServer})
-  var index = {
-    filename: 'index.html',
-    contents: Render(JS.app.pageTmpl, {input: input, Lucy: lucy, shift: Utils.shift}),
-    snippets: {},
-  }
-  var files = [index];
-  var setupSnippet = '';
-  if (input.setup) setupSnippet += input.setup.code
-  if (input.viewSetup) setupSnippet += input.viewSetup.code;
-  if (setupSnippet) index.snippets.setup = setupSnippet;
-  input.actions.forEach(function(action) {
-    index.snippets[action.name] = action.code;
-  });
-  input.views.forEach(function(view) {
-    index.snippets[view.name] = view.code;
-  });
-  serverActions.forEach(function(action) {
-    var actionFile = {
-      filename: action.name + '.php',
-      contents: action.code,
-      snippets: {}
-    };
-    actionFile.snippets[action.name] = action.code;
-    files.push(actionFile);
-  })
-  callback(null, files);
+var toFormat = ['for', 'rof', 'if', 'fi']
+toFormat.forEach(function(f) {
+  JS.html[f] = formatForClient(JS[f]);
+});
+JS.html.variable = function(v) {
+  return '<%= ' + JS.variable(v) + ' %>';
 }
+JS.html.variableJS = JS.variable;

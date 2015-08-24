@@ -26,13 +26,13 @@ var buildOpts = {
   views: {
     language_list: {
       all:
-        '<lucy if="result.foo">\n' +
-        '  <p>foo</p>\n' +
-        '</lucy>\n' +
-        '<lucy if="!result.foo">\n' +
-        '  <p>bar</p>\n' +
-        '</lucy>\n' +
         '<lucy for="l" in="result">\n' +
+        '  <lucy if="l.foo">\n' +
+        '    <p>foo</p>\n' +
+        '  </lucy>\n' +
+        '  <lucy if="!l.foo">\n' +
+        '    <p>bar</p>\n' +
+        '  </lucy>\n' +
         '  <lucy if="index != 2">\n' +
         '    <h2>{{ index }}. {{ l.label }}</h2>\n' +
         '  </lucy>\n' +

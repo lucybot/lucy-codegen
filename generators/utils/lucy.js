@@ -1,4 +1,5 @@
 var Path = require('path');
+var EJS = require('ejs');
 
 var LUtils = require('../../langs/utils.js');
 var AnswerSet = require('./answer-set.js');
@@ -25,11 +26,11 @@ Lucy.prototype.literal = function(obj) {
 }
 
 Lucy.prototype.variableJS = function(varStr) {
-  return self.resolveVariable(varStr);
+  return self.resolveVariable(varStr, self.language.html.variableJS);
 }
 
 Lucy.prototype.variable = function(varStr) {
-  return self.resolveVariable(varStr, self.language.displayVariable);
+  return self.resolveVariable(varStr, self.language.html.variable);
 }
 
 Lucy.prototype.join = function(toJoin, on) {
@@ -79,21 +80,21 @@ Lucy.prototype.for = function(iter) {
   iter = LUtils.parseIterator(iter);
   iter.iterator = self.resolveVariable(iter.iterator);
   iter.group = self.resolveVariable(iter.group);
-  return self.language.for(iter);
+  return self.language.html.for(iter);
 }
 
 Lucy.prototype.rof = function(iter) {
-  return self.language.rof(iter);
+  return self.language.html.rof(iter);
 }
 
 Lucy.prototype.if = function(cond) {
   cond = LUtils.parseCond(cond);
   cond = LUtils.replaceVars(cond, self.resolveVariable);
-  return self.language.if(cond);
+  return self.language.html.if(cond);
 }
 
 Lucy.prototype.fi = function(cond) {
-  return self.language.fi(cond);
+  return self.language.html.fi(cond);
 }
 
 Lucy.prototype.answer = function(question) {
@@ -116,7 +117,7 @@ Lucy.prototype.include = function(view, options) {
         options.data.answers[q] = self.language.literal(answer);
         answer = {val: answer};
       } else if (answer.variable) {
-        options.data.answers[q] = self.resolveVariable(answer.variable, self.language.variableJS);
+        options.data.answers[q] = self.resolveVariable(answer.variable, self.language.html.variableJS);
         answer = {serverInput: true}
       }
       self.answers.addAnswer(q, answer);
@@ -180,7 +181,7 @@ Lucy.prototype.request = function(options) {
   } else {
     options.headers = self.language.literal(options.headers, 0, true);
   }
-  return LUtils.resolveValue(lang.request, {
+  return EJS.render(lang.templates.request, {
       req: options,
       shift: LUtils.shift,
       returnCode: self.returnCode

@@ -20,6 +20,10 @@ App.fixAnswers = function(answers, callback) {
 App.build = function(options, callback) {
   var language = Languages[options.language];
   if (!language || !language.app) return callback({error: "Language " + options.language + " not supported."});
+  var langOpts = options.languageOptions = options.languageOptions || {};
+  if (langOpts[options.language]) {
+    language.setOptions(langOpts[options.language]);
+  }
   var lucy = new Lucy(language, options.answers);
   Async.parallel(Object.keys(options.views).map(function(viewName) {
     if (viewName === 'setup') return function(callback) {callback()}
@@ -78,7 +82,10 @@ App.build = function(options, callback) {
     }
     options.views = viewArray;
     options.actions = actionArray;
-    language.app.build(options, lucy, callback)
+    language.app.build(options, lucy, function(err, files) {
+      if (language.setOptions) language.setOptions();
+      callback(err, files);
+    })
   });
 }
 

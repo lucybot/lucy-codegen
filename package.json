@@ -16,6 +16,7 @@
     "busboy": "~0.2.9"
   },
   "dependencies": {
+    "deep-extend": "^0.4.0",
     "ejs": "~2.3.3",
     "htmlparser2": "~3.8.3",
     "jsonic": "~0.2.2",
