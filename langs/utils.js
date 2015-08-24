@@ -125,6 +125,7 @@ Utils.getKeysAsLiterals = function(obj, keys, lang) {
 }
 
 Utils.addTemplates = function(templates, dir) {
+  if (!FS.existsSync(dir)) return;
   FS.readdirSync(dir).forEach(function(f) {
     var extLoc = f.indexOf('.');
     if (extLoc === -1) extLoc = f.length;
@@ -178,4 +179,9 @@ Utils.initializeApp = function(app, dir) {
 
   var copyDir = Path.join(dir, 'copy');
   if (FS.existsSync(copyDir)) addCopyFiles(copyDir);
+}
+
+Utils.initializeAPIClient = function(apiClient, dir) {
+  apiClient.templates = apiClient.templates || {};
+  Utils.addTemplates(apiClient.templates, Path.join(dir, 'tmpl'));
 }
