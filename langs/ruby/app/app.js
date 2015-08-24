@@ -4,19 +4,7 @@ var EJS = require('ejs');
 
 var Utils = require('../../utils.js');
 
-var readTmpl = function(filename) {
-  return FS.readFileSync(Path.join(__dirname, filename), 'utf8');
-}
-
 var App = module.exports = {
-  copyFiles: [],
-  templates: {
-    routes:     readTmpl('static/routes.ejs.rb'),
-    controller: readTmpl('static/main_controller.ejs.rb'),
-    index:      readTmpl('static/index.html'),
-    include:    readTmpl('repeated/include.html'),
-    gemfile:    readTmpl('static/Gemfile'),
-  },
   getPartialFromViewName: function(v) {
     return v.replace(/[A-Z][a-z]/g, function(whole) {
       return '_' + whole.toLowerCase();
@@ -33,27 +21,7 @@ var App = module.exports = {
     return Utils.shift(code, options.indent);
   }
 }
-
-var addCopyFiles = function(baseDir, subDir) {
-  subDir = subDir || '';
-  var workingDir = Path.join(baseDir, subDir);
-  var files = FS.readdirSync(workingDir);
-  files.forEach(function(f) {
-    var filename = Path.join(subDir, f);
-    if (FS.statSync(Path.join(baseDir, filename)).isDirectory()) {
-      App.copyFiles.push({filename: filename, directory: true});
-      addCopyFiles(baseDir, filename);
-    } else {
-      App.copyFiles.push({
-        filename: filename,
-        contents: FS.readFileSync(Path.join(baseDir, filename), 'utf8'),
-        hidden: true,
-      });
-    }
-  });
-}
-
-addCopyFiles(__dirname + '/copy');
+Utils.initializeApp(App, __dirname);
 
 App.build = function(input, lucy, callback) {
   var files = JSON.parse(JSON.stringify(App.copyFiles));
@@ -63,7 +31,7 @@ App.build = function(input, lucy, callback) {
     shift: Utils.shift,
   }
   var controllerFile = {
-    contents: EJS.render(App.templates.controller, ejsInput),
+    contents: EJS.render(App.templates.main_controller, ejsInput),
     filename: 'app/controllers/main_controller.rb',
     snippets: {},
   }
@@ -96,7 +64,7 @@ App.build = function(input, lucy, callback) {
     template: 'index',
   }, {
     filename: 'Gemfile',
-    template: 'gemfile',
+    template: 'Gemfile',
     hidden: true,
   }];
   copyTemplates.forEach(function(t) {

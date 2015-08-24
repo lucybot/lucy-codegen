@@ -124,15 +124,19 @@ Utils.getKeysAsLiterals = function(obj, keys, lang) {
   return code;
 }
 
-Utils.initializeLanguage = function(language) {
-  language.templates = language.templates || {};
-  var dir = Path.join(__dirname, language.name, 'tmpl');
+Utils.addTemplates = function(templates, dir) {
   FS.readdirSync(dir).forEach(function(f) {
     var extLoc = f.indexOf('.');
     if (extLoc === -1) extLoc = f.length;
     var name = f.substring(0, extLoc);
-    language.templates[name] = FS.readFileSync(Path.join(dir, f), 'utf8');
+    templates[name] = FS.readFileSync(Path.join(dir, f), 'utf8');
   });
+}
+
+Utils.initializeLanguage = function(language) {
+  language.templates = language.templates || {};
+  var dir = Path.join(__dirname, language.name, 'tmpl');
+  Utils.addTemplates(language.templates, dir);
 
   language.options = language.options || {};
   language.setOptions = function(opts) {
@@ -145,4 +149,32 @@ Utils.initializeLanguage = function(language) {
   language.setOptions();
 
   language.app = require('./' + language.name + '/app/app.js');
+}
+
+Utils.initializeApp = function(app, dir) {
+  app.templates = app.templates || {};
+  Utils.addTemplates(app.templates, Path.join(dir, 'tmpl'));
+
+  var addCopyFiles = function(baseDir, subDir) {
+    app.copyFiles = app.copyFiles || [];
+    subDir = subDir || '';
+    var workingDir = Path.join(baseDir, subDir);
+    var files = FS.readdirSync(workingDir);
+    files.forEach(function(f) {
+      var filename = Path.join(subDir, f);
+      if (FS.statSync(Path.join(baseDir, filename)).isDirectory()) {
+        app.copyFiles.push({filename: filename, directory: true});
+        addCopyFiles(baseDir, filename);
+      } else {
+        app.copyFiles.push({
+          filename: filename,
+          contents: FS.readFileSync(Path.join(baseDir, filename), 'utf8'),
+          hidden: true,
+        });
+      }
+    });
+  }
+
+  var copyDir = Path.join(dir, 'copy');
+  if (FS.existsSync(copyDir)) addCopyFiles(copyDir);
 }

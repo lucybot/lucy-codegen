@@ -4,16 +4,10 @@ var EJS = require('ejs');
 var Utils = require('../../utils.js');
 
 var App = module.exports = {
-  viewTmpl: FS.readFileSync(__dirname + '/repeated/view.php', 'utf8'),
-  actionTmpl: FS.readFileSync(__dirname + '/repeated/action.php', 'utf8'),
-  staticTmpl: FS.readdirSync(__dirname + '/static').map(function(file) {
-    return {filename: file, tmpl: FS.readFileSync(__dirname + '/static/' + file, 'utf8')}
-  }),
-  includeTmpl: FS.readFileSync(__dirname + '/repeated/include.php', 'utf8'),
   includeView: function(view, options) {
     var code = '';
     if (options.data) {
-      code = EJS.render(App.includeTmpl, {view: view, options: options});
+      code = EJS.render(App.templates.include, {view: view, options: options});
     } else {
       code += '<?php\n'
       if (options.result) code += '  $result = $' + options.result + ';\n'
@@ -23,6 +17,8 @@ var App = module.exports = {
     return Utils.shift(code, options.indent);
   }
 };
+Utils.initializeApp(App, __dirname);
+
 App.build = function(input, lucy, callback) {
   var files = [];
   var ejsInput = {
@@ -34,7 +30,7 @@ App.build = function(input, lucy, callback) {
     ejsInput.actionIdx = index;
     var actionFile = {
       filename: action.name + '.php',
-      contents: EJS.render(App.actionTmpl, ejsInput),
+      contents: EJS.render(App.templates.action, ejsInput),
       snippets: {},
     };
     actionFile.snippets[action.name] = action.code;
@@ -46,7 +42,7 @@ App.build = function(input, lucy, callback) {
     ejsInput.viewIdx = index;
     var viewFile = {
       filename: view.name + '.php',
-      contents: EJS.render(App.viewTmpl, ejsInput),
+      contents: EJS.render(App.templates.view, ejsInput),
       snippets: {},
     }
     viewFile.snippets[view.name] = view.code;
@@ -61,14 +57,17 @@ App.build = function(input, lucy, callback) {
     }
     files.push(staticFile);
   }
-  App.staticTmpl.forEach(function(file) {
-    var staticFile = {
-      filename: file.filename,
-      contents: EJS.render(file.tmpl, ejsInput),
-      snippets: {},
-    };
-    files.push(staticFile);
+  var staticTmpls = [{
+    filename: 'index.php',
+    template: 'index',
+  }];
+  staticTmpls.forEach(function(f) {
+    files.push({
+      filename: f.filename,
+      contents: EJS.render(App.templates[f.template], ejsInput),
+    })
   })
+
   callback(null, files);
 }
 

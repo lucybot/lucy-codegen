@@ -4,13 +4,10 @@ var EJS = require('ejs');
 var Utils = require('../../utils.js');
 
 var App = module.exports = {
-  serverTmpl: FS.readFileSync(__dirname + '/static/server.js', 'utf8'),
-  indexTmpl: FS.readFileSync(__dirname + '/static/index.html', 'utf8'),
-  includeTmpl: FS.readFileSync(__dirname + '/repeated/include.html', 'utf8'),
   includeView: function(view, options) {
     var code = '';
     if (options.data) {
-      code = EJS.render(App.includeTmpl, {view: view, options: options});
+      code = EJS.render(App.templates.include, {view: view, options: options});
     } else {
       if (options.result && options.result !== 'result') code += '<% result = ' + options.result + '; -%>\n';
       code += '<% include ' + view + ' -%>';
@@ -18,6 +15,7 @@ var App = module.exports = {
     return Utils.shift(code, options.indent);
   }
 };
+Utils.initializeApp(App, __dirname);
 
 App.build = function(input, lucy, callback) {
   var files = [];
@@ -29,7 +27,7 @@ App.build = function(input, lucy, callback) {
 
   var serverFile = {
     filename: 'server.js',
-    contents: EJS.render(App.serverTmpl, ejsInput),
+    contents: EJS.render(App.templates.server, ejsInput),
     snippets: {},
   };
   input.actions.forEach(function(action) {
@@ -54,7 +52,7 @@ App.build = function(input, lucy, callback) {
   });
   var index = {
     filename: 'views/index.ejs',
-    contents: EJS.render(App.indexTmpl, ejsInput),
+    contents: EJS.render(App.templates.index, ejsInput),
     snippets: {}
   }
   files.push(index);
