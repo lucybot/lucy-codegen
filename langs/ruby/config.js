@@ -173,7 +173,6 @@ var addCopyFiles = function(baseDir, subDir) {
 addCopyFiles(__dirname + '/app/copy');
 
 Ruby.app.build = function(input, lucy, callback) {
-  Ruby.setOptions(input.rubyOptions);
   var files = JSON.parse(JSON.stringify(Ruby.app.copyFiles));
   var ejsInput = {
     Lucy: lucy,
@@ -226,5 +225,4 @@ Ruby.app.build = function(input, lucy, callback) {
   files.push(gemfile);
 
   callback(null, files);
-  Ruby.setOptions(null);
 }
