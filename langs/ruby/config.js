@@ -10,7 +10,21 @@ var Ruby = module.exports = {
     extension: '.rb',
     comment: function(str) {return '# ' + str},
     nulltype: 'nil',
+    options: {
+      hashMethod: {
+        default: 'hash',
+      }
+    }
 };
+
+Ruby.setOptions = function(opts) {
+  opts = opts || {};
+  for (key in Ruby.options) {
+    if (opts[key] !== undefined) Ruby.options[key].value = opts[key];
+    else Ruby.options[key].value = Ruby.options[key].default;
+  }
+}
+Ruby.setOptions();
 
 Ruby.concat = function(arr) {
   return arr.join(' + ');
@@ -78,7 +92,7 @@ Ruby.variable = function(v) {
       return varName + '[' + num + ']';
     },
     hashIndex: function(varName, key) {
-      return varName + '.' + key;
+      return Ruby.options.hashMethod.value === 'getter' ? varName + '.' + key : varName + '["' + key + '"]';
     }
   })
 }
@@ -159,6 +173,7 @@ var addCopyFiles = function(baseDir, subDir) {
 addCopyFiles(__dirname + '/app/copy');
 
 Ruby.app.build = function(input, lucy, callback) {
+  Ruby.setOptions(input.rubyOptions);
   var files = JSON.parse(JSON.stringify(Ruby.app.copyFiles));
   var ejsInput = {
     Lucy: lucy,
@@ -211,4 +226,5 @@ Ruby.app.build = function(input, lucy, callback) {
   files.push(gemfile);
 
   callback(null, files);
+  Ruby.setOptions(null);
 }
