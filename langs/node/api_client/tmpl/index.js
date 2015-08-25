@@ -1,16 +1,35 @@
 var FS = require('fs');
 var Request = require('request');
-var Swagger = JSON.parse(FS.readFileSync(__dirname + 'swagger.json', 'utf8'));
+
+var Swagger = JSON.parse(FS.readFileSync(__dirname + '/swagger.json', 'utf8'));
+var matchSwaggerPath = function(path) {
+  for (var templatedPath in Swagger.paths) {
+    var regex = new RegExp(templatedPath.replace(/{\w+}/g, '\\w+'));
+    if (path.match(regex)) return templatedPath;
+  }
+}
+var producesJSON = function(operation) {
+  if (!operation.produces && !swagger.produces) return true;
+  var produces = operation.produces || swagger.produces || [];
+  var mimetype = /application\/json/;
+  var matches = false;
+  produces.forEach(function(type) {
+    if (type.match(mimetype)) matches = true; 
+  });
+  return matches;
+}
 
 var Client = module.exports = function(options) {
+  options = options || {};
   this.host = options.host || Swagger.host;
   this.auth = options.auth || {};
+  this.protocol = (Swagger.schemes || []).indexOf('https') === -1 ? 'http' : 'https';
 }
 
 var initRequestFromSwagger = function() {
   return function(args) {
     var request = {
-      url: this.host,
+      url: this.protocol + '://' + this.host + Swagger.basePath,
       qs: {},
       headers: {},
     };
@@ -29,8 +48,8 @@ var initRequestFromSwagger = function() {
     return request;
   }
 }
-
 Client.prototype.initRequest = initRequestFromSwagger(Swagger);
+
 Client.prototype.addParam = function(request, param, args) {
   if (args[param.name] !== undefined) {
     if (param.in === 'query') {
@@ -56,18 +75,31 @@ Client.prototype.addParams = function(request, params, args) {
 }
 
 Client.prototype.request = function(path, method, args, callback) {
+  if (!callback) {
+    callback = args;
+    args = {};
+  }
+  
   var request = this.initRequest();
   request.method = method.toUpperCase();
   request.url += path;
 
-  var operation = Swagger.paths[path] || {};
-  if (!operation) throw new Error('Path ' + path + 'not supported for GET operation');
+  path = matchSwaggerPath(path);
+  var operation = Swagger.paths[path];
+  if (!operation) throw new Error('Path ' + path + ' not supported.');
   this.addParams(request, operation.parameters, args);
   operation = operation.get;
-  if (!operation) throw new Error('Path ' + path + 'not supported for GET operation');
+  if (!operation) throw new Error('Path ' + path + ' not supported for GET operation.');
   this.addParams(request, operation.parameters, args);
 
+  request.json = producesJSON(operation);
   Request(request, function(err, response, body) {
+    if (request.json && typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+        console.log
+      } catch (e) {}
+    }
     callback(err, body);
   });
 }

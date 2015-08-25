@@ -22,4 +22,14 @@ describe('API Client Generator', function() {
       });
     });
   })
+
+  it('should be able to use node client', function(done) {
+    var HNClient = require(Path.join(__dirname, 'golden/api_client/node/index.js'));
+    var hn = new HNClient();
+    hn.get('/topstories.json', function(err, stories) {
+      Expect(err).to.equal(null);
+      Expect(stories).to.be.an('array');
+      done();
+    })
+  });
 })
