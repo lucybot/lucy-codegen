@@ -9,7 +9,7 @@ var Languages = require('../langs/langs.js');
 var TestUtils = require('./utils.js');
 var Utils = require('../langs/utils.js');
 
-var SWAGGER = JSON.parse(FS.readFileSync(__dirname + '/resources/hacker_news.swagger', 'utf8'));
+var SWAGGER = JSON.parse(FS.readFileSync(__dirname + '/data/hacker_news.swagger', 'utf8'));
 
 describe('REST Client Generator', function() {
   Object.keys(Languages).forEach(function(lang) {
