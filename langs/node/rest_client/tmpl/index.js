@@ -9,8 +9,8 @@ var matchSwaggerPath = function(path) {
   }
 }
 var producesJSON = function(operation) {
-  if (!operation.produces && !swagger.produces) return true;
-  var produces = operation.produces || swagger.produces || [];
+  if (!operation.produces && !Swagger.produces) return true;
+  var produces = operation.produces || Swagger.produces || [];
   var mimetype = /application\/json/;
   var matches = false;
   produces.forEach(function(type) {
@@ -29,7 +29,7 @@ var Client = module.exports = function(options) {
 var initRequestFromSwagger = function() {
   return function(args) {
     var request = {
-      url: this.protocol + '://' + this.host + Swagger.basePath,
+      url: this.protocol + '://' + this.host + (Swagger.basePath === '/' ? '' : Swagger.basePath),
       qs: {},
       headers: {},
     };
@@ -88,8 +88,8 @@ Client.prototype.request = function(path, method, args, callback) {
   var operation = Swagger.paths[path];
   if (!operation) throw new Error('Path ' + path + ' not supported.');
   this.addParams(request, operation.parameters, args);
-  operation = operation.get;
-  if (!operation) throw new Error('Path ' + path + ' not supported for GET operation.');
+  operation = operation[method];
+  if (!operation) throw new Error('Path ' + path + ' does not support ' + method.toUpperCase() + 'operation.');
   this.addParams(request, operation.parameters, args);
 
   request.json = producesJSON(operation);
