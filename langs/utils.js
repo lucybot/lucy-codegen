@@ -184,4 +184,8 @@ Utils.initializeApp = function(app, dir) {
 Utils.initializeAPIClient = function(apiClient, dir) {
   apiClient.templates = apiClient.templates || {};
   Utils.addTemplates(apiClient.templates, Path.join(dir, 'tmpl'));
+  apiClient.sampleCode = function(options, callback) {
+    var code = EJS.render(APIClient.templates.sample_code, {input: options});
+    callback(null, code);
+  }
 }
