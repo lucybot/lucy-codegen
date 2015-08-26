@@ -150,7 +150,7 @@ Utils.initializeLanguage = function(language) {
   language.setOptions();
 
   language.app = require('./' + language.name + '/app/app.js');
-  language.apiClient = require('./' + language.name + '/api_client/api_client.js');
+  language.apiClient = require('./' + language.name + '/rest_client/rest_client.js');
 }
 
 Utils.initializeApp = function(app, dir) {
