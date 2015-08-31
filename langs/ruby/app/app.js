@@ -5,6 +5,7 @@ var EJS = require('ejs');
 var Utils = require('../../utils.js');
 
 var App = module.exports = {
+  startServer: function(opts) {return 'bin/rails server -b 0.0.0.0 -p ' + opts.port},
   getPartialFromViewName: function(v) {
     return v.replace(/[A-Z][a-z]/g, function(whole) {
       return '_' + whole.toLowerCase();

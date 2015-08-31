@@ -4,6 +4,7 @@ var EJS = require('ejs');
 var Utils = require('../../utils.js');
 
 var App = module.exports = {
+  startServer: function(opts) {return 'php -S 0.0.0.0:' + opts.port + ' -t ' + opts.directory},
   includeView: function(view, options) {
     var code = EJS.render(App.templates.include, {view: view, options: options});
     return Utils.shift(code, options.indent);
