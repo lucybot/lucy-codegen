@@ -30,7 +30,7 @@ describe('EJS translation', function() {
       '</lucy>';
     var ejs =
       '<%- Lucy.for("thing in things") %>\n' +
-      '  <h2><%- Lucy.variable("index") %></h2>\n' +
+      '  <h2><%- Lucy.variableHTML("index") %></h2>\n' +
       '<%- Lucy.rof() %>'
     Expect(translateToEJS(ltml)).to.equal(ejs);
   });
@@ -91,7 +91,7 @@ describe('EJS translation', function() {
       '</lucy>';
     var ejs =
       '<%- Lucy.for("thing in things") %>\n' +
-      '  <h2><%- Lucy.variable("index") %></h2>\n' +
+      '  <h2><%- Lucy.variableHTML("index") %></h2>\n' +
       '  <h3 class="head">head</h3>\n' +
       '  <div class="div" attr="val">\n' +
       '    <p class="small">small</p>\n' +
@@ -123,7 +123,7 @@ describe('EJS translation', function() {
       '<%- Lucy.for("thing in things") %>\n' +
       '  Thing:\n' +
       '  <%- Lucy.if("thing.hasStuff") %>\n' +
-      '    <%- Lucy.variable("thing.stuff") %>\n' +
+      '    <%- Lucy.variableHTML("thing.stuff") %>\n' +
       '  <%- Lucy.fi() %>\n' +
       '  End Thing\n' + 
       '<%- Lucy.rof() %>'
