@@ -27,7 +27,12 @@ App.build = function(options, callback) {
   var lucy = new Lucy(language, options.answers);
   var ejsViews = {};
   Async.parallel(Object.keys(options.views).map(function(viewName) {
-    if (viewName === 'setup') return function(callback) {callback()}
+    if (viewName === 'setup') return function(callback) {
+      ejsViews[viewName] = ejsViews[viewName] || {};
+      var viewObj = options.views[viewName];
+      ejsViews[viewName][options.language] = viewObj[options.language] || viewObj.all;
+      callback()
+    }
     return function(callback) {
       var viewObj = options.views[viewName];
       View.translateToEJS(viewObj[options.language] || viewObj.all, function(err, view) {
