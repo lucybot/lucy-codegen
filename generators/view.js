@@ -21,7 +21,7 @@ EJS.tag = function(attrs, contents) {
   }
 }
 EJS.variable = function(variable) {
-  return '<%- Lucy.variable("' + variable.trim() + '") %>';
+  return '<%- Lucy.variableHTML("' + variable.trim() + '") %>';
 }
 EJS.for = function(attrs) {
   return '<%- Lucy.for("' + attrs.for.trim() + ' in ' + attrs.in.trim() + '") %>';

@@ -39,7 +39,11 @@
     </div>
     <script type="text/javascript">
 <% if (input.main.data) { -%>
-      <%- input.main.data.action %>({}, function(result) {
+      <%- input.main.data.action %>({
+<%   for (var answer in input.main.data.answers) { -%>
+       <%- answer %>: <%- Lucy.code.variable("answers." + answer) %>,
+<%   } -%>
+      }, function(result) {
         $('.container').html(<%- input.main.view %>View({result: result}));
       })
 <% } else { -%>

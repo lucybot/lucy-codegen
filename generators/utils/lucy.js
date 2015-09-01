@@ -29,6 +29,10 @@ Lucy.prototype.variableJS = function(varStr) {
   return self.resolveVariable(varStr, self.language.html.variableJS);
 }
 
+Lucy.prototype.variableHTML = function(varStr) {
+  return self.resolveVariable(varStr, self.language.html.variable, function(v) {return v});
+}
+
 Lucy.prototype.variable = function(varStr) {
   return self.resolveVariable(varStr, self.language.html.variable);
 }
@@ -46,9 +50,10 @@ Lucy.prototype.nulltype = function() {
   return self.language.nulltype;
 }
 
-Lucy.prototype.resolveVariable = function(varStr, varFunc) {
+Lucy.prototype.resolveVariable = function(varStr, varFunc, litFunc) {
   var lang = self.language;
   if (!varFunc) varFunc = lang.variable;
+  if (!litFunc) litFunc = lang.literal;
   if (varStr === 'index') {
     varStr = lang.index || varStr;
     return varFunc(varStr);
@@ -65,7 +70,7 @@ Lucy.prototype.resolveVariable = function(varStr, varFunc) {
     if (!variable) {
       return lang.nulltype;
     } else if (typeof variable.val !== 'undefined') {
-      return lang.literal(variable.val);
+      return litFunc(variable.val);
     } else if (variable.userInput || variable.serverInput) {
       return LUtils.resolveValue(lang.userInput, {question: question});
     } else {
