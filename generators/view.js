@@ -21,7 +21,7 @@ EJS.tag = function(attrs, contents) {
   }
 }
 EJS.variable = function(variable) {
-  return '<%- Lucy.variable("' + variable.trim() + '") %>';
+  return '<%- Lucy.variableHTML("' + variable.trim() + '") %>';
 }
 EJS.for = function(attrs) {
   return '<%- Lucy.for("' + attrs.for.trim() + ' in ' + attrs.in.trim() + '") %>';
@@ -49,7 +49,7 @@ EJS.mrof = function(attrs) {
 var unquote = function(str) { return str.replace(/\\"/g, '"'); }
 
 EJS.include = function(attrs) {
-  var ret = '<%- Lucy.include("' + attrs.include.trim() + '"';
+  var ret = '<%- Lucy.include("' + attrs.include.trim().replace(/\W/g, '') + '"';
   var useOptions = attrs.result || attrs.resultvar || attrs.action || attrs.inputs || attrs.inputvars;
   var options = {};
   if (attrs.resultvar) {
@@ -65,7 +65,7 @@ EJS.include = function(attrs) {
   }
   if (attrs.action) {
     options.data = options.data || {};
-    options.data.action = attrs.action;
+    options.data.action = attrs.action.replace(/\W/g, '');
   }
   if (attrs.inputs) {
     options.data = options.data || {};

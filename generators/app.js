@@ -25,6 +25,7 @@ App.build = function(options, callback) {
     language.setOptions(langOpts[options.language]);
   }
   var lucy = new Lucy(language, options.answers);
+  var ejsViews = {};
   Async.parallel(Object.keys(options.views).map(function(viewName) {
     if (viewName === 'setup') return function(callback) {callback()}
     return function(callback) {
@@ -33,7 +34,8 @@ App.build = function(options, callback) {
         if (err) {
           callback(err);
         } else {
-          options.views[viewName][options.language] = view;
+          ejsViews[viewName] = ejsViews[viewName] || {};
+          ejsViews[viewName][options.language] = view;
           callback();
         }
       });
@@ -42,8 +44,8 @@ App.build = function(options, callback) {
     if (err) return callback(err);
     var actionArray = [];
     var viewArray = [];
-    for (viewName in options.views) {
-      var ejs = options.views[viewName][options.language];
+    for (viewName in ejsViews) {
+      var ejs = ejsViews[viewName][options.language];
       try {
         var view = {
           name: viewName,
