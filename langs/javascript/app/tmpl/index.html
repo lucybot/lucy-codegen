@@ -41,7 +41,7 @@
 <% if (input.main.data) { -%>
       <%- input.main.data.action %>({
 <%   for (var answer in input.main.data.answers) { -%>
-       <%- answer %>: <%- Lucy.code.variable("answers." + answer) %>,
+       '<%- answer %>': <%- Lucy.code.variable("answers." + answer) %>,
 <%   } -%>
       }, function(result) {
         $('.container').html(<%- input.main.view %>View({result: result}));
