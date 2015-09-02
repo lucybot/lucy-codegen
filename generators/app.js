@@ -7,7 +7,7 @@ var EJS = require('ejs');
 
 var App = module.exports = {};
 
-App.fixAnswers = function(answers, callback) {
+var fixAnswers = function(answers, callback) {
   for (q in answers) {
     var type = typeof answers[q];
     if (type !== 'object' || Array.isArray(answers[q])) {
@@ -18,6 +18,7 @@ App.fixAnswers = function(answers, callback) {
 }
 
 App.build = function(options, callback) {
+  App.fixAnswers(options.answers);
   var language = Languages[options.language];
   if (!language || !language.app) return callback({error: "Language " + options.language + " not supported."});
   var langOpts = options.languageOptions = options.languageOptions || {};
