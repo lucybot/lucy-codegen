@@ -149,6 +149,10 @@ Utils.initializeLanguage = function(language) {
   language.setOptions();
 
   language.app = require('./' + language.name + '/app/app.js');
+  var restClientDir = Path.join(__dirname, language.name, 'rest_client');
+  if (FS.existsSync(restClientDir)) {
+    language.restClient = require(restClientDir + '/rest-client.js');
+  }
 }
 
 Utils.initializeApp = function(app, dir) {

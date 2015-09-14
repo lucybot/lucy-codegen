@@ -15,22 +15,42 @@ var SWAGGER = JSON.parse(FS.readFileSync(__dirname + '/data/swagger/petstore.jso
 
 describe('REST Client Generator', function() {
   Object.keys(Languages).forEach(function(lang) {
-    if (!Languages[lang].restClient) return;
-    it('should build client for ' + lang, function() {
-      lang = Languages[lang];
-      ClientBuilder.build({language: lang.name, swagger: SWAGGER, className: 'LucyBot'}, function(err, files) {
+    lang = Languages[lang];
+    if (!lang.restClient) return;
+    it('should build client for ' + lang.name, function(done) {
+      ClientBuilder.build({language: lang.name, swagger: SWAGGER, className: 'PetStore'}, function(err, files) {
         Expect(err).to.equal(null);
         var outputDir = Path.join(__dirname, 'golden/rest_client', lang.name);
         TestUtils.checkGoldenFiles(outputDir, files);
+        done();
       });
     });
+
+    it('should build sample code for ' + lang.name, function(done) {
+      ClientBuilder.buildSampleCode({
+        language: lang.name,
+        swagger: SWAGGER,
+        className: 'PetStore',
+        packageName: __dirname + '/golden/rest_client/node/client.js',
+        method: 'get',
+        path: '/pets',
+        answers: {type: 'dog'}
+      }, function(err, code) {
+        Expect(err).to.equal(null);
+        var files = [{filename: 'code.js', contents: code}];
+        var outputDir = Path.join(__dirname, 'golden/rest_client_sample_code', lang.name);
+        TestUtils.checkGoldenFiles(outputDir, files);
+        done();
+      })
+    })
   });
 });
 
 describe('NodeJS REST Client', function() {
-  var LucyBot = require('./golden/rest_client/node/client.js').LucyBot;
-  var client = new LucyBot('http://127.0.0.1:3333');
+  var client = null;
   before(function() {
+    var PetStore = require('./golden/rest_client/node/client.js').PetStore;
+    client = new PetStore('http://127.0.0.1:3333');
     Server.listen(3333);
   });
 

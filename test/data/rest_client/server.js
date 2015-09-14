@@ -21,3 +21,7 @@ module.exports = {
     App.listen(port);
   }
 }
+
+if (require.main === module) {
+  module.exports.listen(3333);
+}

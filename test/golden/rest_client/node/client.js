@@ -1,18 +1,18 @@
 /*jshint -W069 */
 /**
  * 
- * @class LucyBot
+ * @class PetStore
  * @param {(string|object)} [domainOrOptions] - The project domain or options object. If object, see the object's optional properties.
  * @param {string} [domainOrOptions.domain] - The project domain
  * @param {object} [domainOrOptions.token] - auth token - object with value property and optional headerOrQueryName and isQuery properties
  */
-var LucyBot = (function() {
+var PetStore = (function() {
     'use strict';
 
     var request = require('request');
     var Q = require('q');
 
-    function LucyBot(options) {
+    function PetStore(options) {
         var domain = (typeof options === 'object') ? options.domain : options;
         this.domain = domain ? domain : '';
         if (this.domain.length === 0) {
@@ -23,11 +23,11 @@ var LucyBot = (function() {
     /**
      * 
      * @method
-     * @name LucyBot#getPets
+     * @name PetStore#getPets
      * @param {string} type - 
      * 
      */
-    LucyBot.prototype.getPets = function(parameters) {
+    PetStore.prototype.getPets = function(parameters) {
         if (parameters === undefined) {
             parameters = {};
         }
@@ -96,11 +96,11 @@ var LucyBot = (function() {
     /**
      * 
      * @method
-     * @name LucyBot#getPetByName
+     * @name PetStore#getPetByName
      * @param {string} name - 
      * 
      */
-    LucyBot.prototype.getPetByName = function(parameters) {
+    PetStore.prototype.getPetByName = function(parameters) {
         if (parameters === undefined) {
             parameters = {};
         }
@@ -165,7 +165,7 @@ var LucyBot = (function() {
         return deferred.promise;
     };
 
-    return LucyBot;
+    return PetStore;
 })();
 
-exports.LucyBot = LucyBot;
+exports.PetStore = PetStore;
