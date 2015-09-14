@@ -1,5 +1,6 @@
 var FS = require('fs');
 var DeepExtend = require('deep-extend');
+var SwaggerCodegen = require('swagger-js-codegen').CodeGen;
 
 var Utils = require('../utils.js');
 var JS = require('../javascript/config.js');
@@ -26,6 +27,8 @@ Node.redirect = function(input) {
 Node.restClient = {};
 Node.restClient.build = function(input, callback) {
   var code = SwaggerCodegen.getNodeCode(input);
-  console.log('code', code);
-  callback(null, code);
+  callback(null, [{
+    filename: 'client.js',
+    contents: code,
+  }]);
 }

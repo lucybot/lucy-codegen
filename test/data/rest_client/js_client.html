@@ -1,0 +1,12 @@
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+    <script src="../golden/rest_client/javascript/client.js"></script>
+    <script>
+      var PetStore = new PetStoreClient();
+      PetStore.get('/pets')
+        .done(function(data) {console.log(JSON.stringify(data))})
+        .fail(console.log)
+    </script>
+  </head>
+</html>
