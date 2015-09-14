@@ -21,6 +21,7 @@
     "ejs": "~2.3.3",
     "htmlparser2": "~3.8.3",
     "jsonic": "~0.2.2",
+    "swagger-js-codegen": "^1.1.4",
     "underscore": "~1.8.3"
   }
 }

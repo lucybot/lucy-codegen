@@ -19,7 +19,13 @@ Node.returnCode = function(input) {
 Node.userInput = function(input) {
   return 'req.body.' + input.question;
 }
-
 Node.redirect = function(input) {
   return "res.redirect('" + input.redirectPath + "')";
+}
+
+Node.restClient = {};
+Node.restClient.build = function(input, callback) {
+  var code = SwaggerCodegen.getNodeCode(input);
+  console.log('code', code);
+  callback(null, code);
 }
