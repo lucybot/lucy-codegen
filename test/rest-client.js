@@ -28,5 +28,12 @@ describe('REST Client Generator', function() {
         TestUtils.checkGoldenFiles(outputDir, files);
       });
     });
+  });
+
+  it('should be able to use Node client', function(done) {
+     var client = require('./golden/rest_client/node/client.js');
+     client.getPets().then(function(pets) {
+       
+     })
   })
 });
