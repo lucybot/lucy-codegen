@@ -11,7 +11,7 @@ var Languages = require('../langs/langs.js');
 var TestUtils = require('./utils.js');
 var Utils = require('../langs/utils.js');
 
-var SWAGGER = JSON.parse(FS.readFileSync(__dirname + '/data/swagger/hacker_news.json', 'utf8'));
+var SWAGGER = JSON.parse(FS.readFileSync(__dirname + '/data/swagger/petstore.json', 'utf8'));
 
 describe('REST Client Generator', function() {
   before(function() {
@@ -30,10 +30,21 @@ describe('REST Client Generator', function() {
     });
   });
 
+  var checkPets = function(pets) {
+    Expect(pets).to.be.an('array');
+    Expect(pets).to.deep.equal([{name: 'Lucy', type: 'dog'}])
+  }
+
   it('should be able to use Node client', function(done) {
-     var client = require('./golden/rest_client/node/client.js');
+     var LucyBot = require('./golden/rest_client/node/client.js').LucyBot;
+     var client = new LucyBot('http://127.0.0.1:3333');
      client.getPets().then(function(pets) {
-       
+       checkPets(pets.body);
+       done();
+     }).fail(function(err) {
+       console.log(err);
+       Expect(err).to.equal(null);
+       done();
      })
   })
 });
