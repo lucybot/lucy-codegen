@@ -93,3 +93,6 @@ JS.html.variable = function(v) {
   return '<%= ' + JS.variable(v) + ' %>';
 }
 JS.html.variableJS = JS.variable;
+JS.html.variableEscaped = function(v) {
+  return '<%- ' + JS.variable(v) + ' %>';
+}

@@ -1,0 +1,15 @@
+<lucy for="l" in="result">
+  <lucy if="l.foo">
+    <p>foo</p>
+  </lucy>
+  <lucy if="!l.foo">
+    <p>bar</p>
+  </lucy>
+  <lucy if="index != 2">
+    <h2>{{ index }}. {{ l.label }}</h2>
+  </lucy>
+</lucy>
+<br><br>
+<h3>{{ answers.name }}</h3>
+<div>{{ answers.embeddedHTML }}</div>
+<div>{{{ answers.escapedHTML }}}</div>

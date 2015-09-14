@@ -25,18 +25,7 @@ var buildOpts = {
   },
   views: {
     language_list: {
-      all:
-        '<lucy for="l" in="result">\n' +
-        '  <lucy if="l.foo">\n' +
-        '    <p>foo</p>\n' +
-        '  </lucy>\n' +
-        '  <lucy if="!l.foo">\n' +
-        '    <p>bar</p>\n' +
-        '  </lucy>\n' +
-        '  <lucy if="index != 2">\n' +
-        '    <h2>{{ index }}. {{ l.label }}</h2>\n' +
-        '  </lucy>\n' +
-        '</lucy>'
+      all: FS.readFileSync(__dirname + '/data/app/view.html', 'utf8'),
     }
   },
   main: {
@@ -46,7 +35,10 @@ var buildOpts = {
     }
   },
   answers: {
-    apikey: {val: 'foobar'}
+    apikey: 'foobar',
+    name: 'Lucy Goose',
+    embeddedHTML: '<b>Bold</b>&nbsp;<i>Italic</i>',
+    escapedHTML: 'I <3 <b>APIs</b>'
   },
 }
 

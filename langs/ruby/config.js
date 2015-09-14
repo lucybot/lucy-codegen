@@ -96,6 +96,9 @@ Ruby.html.variable = function(v) {
 Ruby.html.variableJS = function(v) {
   return "<%== " + Ruby.jsonEncode(Ruby.variable(v)) + " %>"; 
 }
+Ruby.html.variableEscaped = function(v) {
+  return "<%=raw " + Ruby.variable(v) + " %>";
+}
 
 Ruby.jsonEncode = function(codeStr) {
   return codeStr + ".to_json";

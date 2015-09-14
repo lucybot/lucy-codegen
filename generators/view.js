@@ -3,7 +3,8 @@ var View = module.exports = {};
 var HTMLParser = require('htmlparser2');
 var ParseJS = require('jsonic');
 
-// Note: [\s\S] is used inplace of . because JS won't match \n to 
+// Note: [\s\S] is used inplace of '.' because JS won't match \n to '.'
+var ESCAPE_REGEX =  /{{{([\s\S]*?)}}}/g;
 var VARIABLE_REGEX = /{{([\s\S]*?)}}/g;
 
 var EJS = {};
@@ -22,6 +23,9 @@ EJS.tag = function(attrs, contents) {
 }
 EJS.variable = function(variable) {
   return '<%- Lucy.variableHTML("' + variable.trim() + '") %>';
+}
+EJS.escapeVariable = function(variable) {
+  return '<%- Lucy.variableHTMLEscaped("' + variable.trim() + '") %>';
 }
 EJS.for = function(attrs) {
   return '<%- Lucy.for("' + attrs.for.trim() + ' in ' + attrs.in.trim() + '") %>';
@@ -128,7 +132,11 @@ View.translateToEJS = function(ltml, callback) {
   }, {decodeEntities: true});
   parser.write(ltml);
   parser.end();
-  ret = ret.replace(VARIABLE_REGEX, function(whole, variable) {
+  ret = ret
+  .replace(ESCAPE_REGEX, function(whole, variable) {
+    return EJS.escapeVariable(variable);
+  })
+  .replace(VARIABLE_REGEX, function(whole, variable) {
     return EJS.variable(variable);
   });
   if (callback) callback(null, ret);

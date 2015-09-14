@@ -29,6 +29,16 @@ Lucy.prototype.variableJS = function(varStr) {
   return self.resolveVariable(varStr, self.language.html.variableJS);
 }
 
+Lucy.prototype.variableHTMLEscaped = function(varStr) {
+  return self.resolveVariable(varStr, self.language.html.variableEscaped || self.language.html.variable, function(v) {
+    return v.replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\"/g, '&quot;')
+            .replace(/\'/g, '&#39;');
+  });
+}
+
 Lucy.prototype.variableHTML = function(varStr) {
   return self.resolveVariable(varStr, self.language.html.variable, function(v) {return v});
 }
