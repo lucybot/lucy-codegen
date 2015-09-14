@@ -24,6 +24,7 @@ var LucyBot = (function() {
      * 
      * @method
      * @name LucyBot#getPets
+     * @param {string} type - 
      * 
      */
     LucyBot.prototype.getPets = function(parameters) {
@@ -39,6 +40,81 @@ var LucyBot = (function() {
         var queryParameters = {};
         var headers = {};
         var form = {};
+
+        if (parameters['type'] !== undefined) {
+            queryParameters['type'] = parameters['type'];
+        }
+
+        if (parameters.$queryParameters) {
+            Object.keys(parameters.$queryParameters)
+                .forEach(function(parameterName) {
+                    var parameter = parameters.$queryParameters[parameterName];
+                    queryParameters[parameterName] = parameter;
+                });
+        }
+
+        var req = {
+            method: 'GET',
+            uri: domain + path,
+            qs: queryParameters,
+            headers: headers,
+            body: body
+        };
+        if (Object.keys(form).length > 0) {
+            req.form = form;
+        }
+        if (typeof(body) === 'object' && !(body instanceof Buffer)) {
+            req.json = true;
+        }
+        request(req, function(error, response, body) {
+            if (error) {
+                deferred.reject(error);
+            } else {
+                if (/^application\/(.*\\+)?json/.test(response.headers['content-type'])) {
+                    try {
+                        body = JSON.parse(body);
+                    } catch (e) {
+
+                    }
+                }
+                if (response.statusCode >= 200 && response.statusCode <= 299) {
+                    deferred.resolve({
+                        response: response,
+                        body: body
+                    });
+                } else {
+                    deferred.reject({
+                        response: response,
+                        body: body
+                    });
+                }
+            }
+        });
+
+        return deferred.promise;
+    };
+    /**
+     * 
+     * @method
+     * @name LucyBot#getPetByName
+     * @param {string} name - 
+     * 
+     */
+    LucyBot.prototype.getPetByName = function(parameters) {
+        if (parameters === undefined) {
+            parameters = {};
+        }
+        var deferred = Q.defer();
+
+        var domain = this.domain;
+        var path = '/pet/{name}';
+
+        var body;
+        var queryParameters = {};
+        var headers = {};
+        var form = {};
+
+        path = path.replace('{name}', parameters['name']);
 
         if (parameters.$queryParameters) {
             Object.keys(parameters.$queryParameters)

@@ -7,6 +7,23 @@
   },
   "paths": {
     "/pets": {
+      "parameters": [{
+        "name": "type",
+        "type": "string",
+        "in": "query"
+      }],
+      "get": {
+        "responses": {
+          "200": {"description": "OK"}
+        }
+      }
+    },
+    "/pet/{name}": {
+      "parameters": [{
+        "name": "name",
+        "type": "string",
+        "in": "path"
+      }],
       "get": {
         "responses": {
           "200": {"description": "OK"}
