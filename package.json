@@ -21,6 +21,7 @@
     "deep-extend": "^0.4.0",
     "ejs": "~2.3.3",
     "htmlparser2": "~3.8.3",
+    "java": "^0.5.5",
     "jsonic": "~0.2.2",
     "lodash": "^3.10.1",
     "swagger-js-codegen": "^1.1.4",
