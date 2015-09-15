@@ -28,7 +28,18 @@ var Codegen = module.exports = {};
 
 Codegen.build = function(options, callback) {
   if (options.language === 'node') {
-    callback(null, JSCodegen.getNodeCode(options));
+    var client = {
+      filename: 'client.js',
+      contents: JSCodegen.getNodeCode(options),
+    }
+    var files = [client];
+    files.push({
+      filename: 'package.json',
+      contents: JSON.stringify({
+        name: options.packageName || 'swagger-client',
+      }, null, 2),
+    })
+    callback(null, files);
   } else {
     // TODO: use async API
     var swaggerString = JSON.stringify(options.swagger);
