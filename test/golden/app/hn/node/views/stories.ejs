@@ -1,11 +1,11 @@
 <% result.forEach(function(storyID, index) { %>
   <% if(index < 10) { %>
     <div class="story">
-      <%= storyID %> 
+      <%- storyID %> 
       <a class="btn btn-success"
      data-action="getItem"
      data-view="itemView"
-     data-answers="{itemID: <%= storyID %>}">
+     data-answers="{itemID: <%- storyID %>}">
      Load
   </a>
 

@@ -9,7 +9,7 @@ class MainController < ApplicationController
     http.use_ssl = true
     request = Net::HTTP::Get.new(uri.request_uri)
     @result = JSON.parse(http.request(request).body)
-    render :template => "main/item", :locals => {:result => @result}
+    render :template => "main/_item", :locals => {:result => @result}
   end
 
   def getStories
@@ -18,6 +18,6 @@ class MainController < ApplicationController
     http.use_ssl = true
     request = Net::HTTP::Get.new(uri.request_uri)
     @result = JSON.parse(http.request(request).body)
-    render :template => "main/stories", :locals => {:result => @result}
+    render :template => "main/_stories", :locals => {:result => @result}
   end
 end

@@ -12,6 +12,6 @@ class MainController < ApplicationController
     }
     request = Net::HTTP::Get.new(uri.request_uri, headers)
     @result = JSON.parse(http.request(request).body)
-    render :template => "main/language_list", :locals => {:result => @result}
+    render :template => "main/_language_list", :locals => {:result => @result}
   end
 end

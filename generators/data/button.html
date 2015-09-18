@@ -1,4 +1,4 @@
-<a class="btn btn-success"
+<a class="btn btn-<%- options.type || 'success' %>"
    data-action="<%- options.data.action %>"
    data-view="<%- options.view %>View"
    data-answers="{<% for (var answer in options.data.answers) %><%- answer %>: <%- options.data.answers[answer] %>}">

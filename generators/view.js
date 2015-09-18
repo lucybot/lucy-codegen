@@ -83,6 +83,7 @@ EJS.fi = function() { return "<%- Lucy.fi() %>" }
 EJS.button = function(attrs) {
   var opts = parseOptions(attrs);
   opts.button = attrs.button;
+  opts.type = attrs.type;
   return '<%- Lucy.button(' + JSON.stringify(opts) + ') %>';
 }
 

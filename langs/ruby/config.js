@@ -110,7 +110,7 @@ Ruby.join = function(variable, on) {
   return variable + ".join('" + on + "')";
 }
 Ruby.returnCode = function(input) {
-  var ret = 'render :template => "main/' + Ruby.app.getPartialFromViewName(input.clientFile) + '", :locals => {:result => ' + input.ret + '}';
+  var ret = 'render :template => "main/_' + Ruby.app.getPartialFromViewName(input.clientFile) + '", :locals => {:result => ' + input.ret + '}';
   return Utils.addIndent(ret, input.tabs);
 }
 Ruby.userInput = function(input) {
