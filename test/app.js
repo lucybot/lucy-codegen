@@ -4,8 +4,14 @@ var Mkdirp = require('mkdirp');
 var Rmdir = require('rimraf');
 var Expect = require('chai').expect;
 
+var TestUtils = require('./utils.js');
+
 var App = require('../generators/app.js');
 var Langs = require('../langs/langs.js');
+
+var readData = function(file) {
+  return FS.readFileSync(__dirname + '/data/app/' + file, 'utf8');
+}
 
 var buildOpts = {
   actions: {
@@ -42,44 +48,59 @@ var buildOpts = {
   },
 }
 
+var hnBuild = {
+  actions: {
+    getItem: {
+      all: readData('hn/actions/getItem.js'),
+      view: 'item',
+    },
+    getStories: {
+      all: readData('hn/actions/getStories.js'),
+      view: 'stories',
+    }
+  },
+  views: {
+    item: {
+      all: readData('hn/views/Item.html')
+    },
+    stories: {
+      all: readData('hn/views/Stories.html')
+    }
+  },
+  main: {
+    view: 'stories',
+    data: {
+      action: 'getStories'
+    }
+  }
+}
+
 describe('App Builder', function() {
   Object.keys(Langs).forEach(function(lang) {
     if (!Langs[lang].app) return;
-    var opts = JSON.parse(JSON.stringify(buildOpts));
-    opts.language = lang;
-    for (action in opts.actions) {
-      opts.actions[action][lang] = opts.actions[action].all;
-    }
-    for (view in opts.views) {
-      opts.views[view][lang] = opts.views[view].all;
-    }
-    it('should build code for ' + lang, function() {
+    it('should build HN app in ' + lang, function(done) {
+      var opts = JSON.parse(JSON.stringify(hnBuild));
+      opts.language = lang;
+      for (action in opts.actions) opts.actions[action][lang] = opts.actions[action].all;
+      for (view in opts.views) opts.views[view][lang] = opts.views[view].all;
       App.build(opts, function(err, files) {
-        if (err) {
-          console.log(err);
-          throw err;
-        }
-        var dirs = files.filter(function(f) { return f.directory });
-        files = files.filter(function(f) {return !f.directory});
-        var outputDir = Path.join(__dirname, 'golden/app', lang);
-        if (process.env.WRITE_GOLDEN) {
-          if (FS.existsSync(outputDir)) Rmdir.sync(outputDir);
-          Mkdirp.sync(outputDir);
-          dirs.forEach(function(dir) {
-            var filename = Path.join(outputDir, dir.filename);
-            if (!FS.existsSync(filename)) Mkdirp.sync(Path.join(outputDir, dir.filename));
-          });
-          files.forEach(function(file) {
-            console.log('WRITING: ' + file.filename);
-            FS.writeFileSync(Path.join(outputDir, file.filename), file.contents);
-          });
-        } else {
-          files.forEach(function(file) {
-            var golden = FS.readFileSync(Path.join(outputDir, file.filename), 'utf8');
-            Expect(file.contents).to.equal(golden);
-          })
-        }
-      });
+        if (err) throw err;
+        TestUtils.checkGoldenFiles(__dirname + '/golden/app/hn/' + lang, files);
+        done();
+      })
+    })
+
+    it('should build code for ' + lang, function(done) {
+      var opts = JSON.parse(JSON.stringify(buildOpts));
+      opts.language = lang;
+      for (action in opts.actions) opts.actions[action][lang] = opts.actions[action].all;
+      for (view in opts.views) opts.views[view][lang] = opts.views[view].all;
+      App.build(opts, function(err, files) {
+        if (err) throw err;
+        TestUtils.checkGoldenFiles(__dirname + '/golden/app/' + lang, files);
+        done();
+      })
     });
   });
 });
+

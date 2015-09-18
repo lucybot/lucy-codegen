@@ -1,3 +1,4 @@
+var FS = require('fs');
 var Path = require('path');
 var EJS = require('ejs');
 
@@ -45,6 +46,13 @@ Lucy.prototype.variableHTML = function(varStr) {
 
 Lucy.prototype.variable = function(varStr) {
   return self.resolveVariable(varStr, self.language.html.variable);
+}
+
+var BUTTON_TMPL = FS.readFileSync(__dirname + '/../data/button.html', 'utf8');
+Lucy.prototype.button = function(input) {
+  self.resolveAnswers(input.data.answers, self.language.html.variable);
+  var code = EJS.render(BUTTON_TMPL, {options: input});
+  return LUtils.shift(code, input.indent);
 }
 
 Lucy.prototype.join = function(toJoin, on) {
@@ -118,6 +126,20 @@ Lucy.prototype.answer = function(question) {
   return variable.val;
 }
 
+Lucy.prototype.resolveAnswers = function(answers, varFunc) {
+  for (q in answers) {
+    var answer = answers[q];
+    if (typeof answer !== 'object') {
+      answers[q] = self.language.literal(answer);
+      answer = {val: answer};
+    } else if (answer.variable) {
+      answers[q] = self.resolveVariable(answer.variable, varFunc || self.language.html.variableJS);
+      answer = {serverInput: true}
+    }
+    self.answers.addAnswer(q, answer);
+  }
+}
+
 Lucy.prototype.include = function(view, options) {
   if (++self.IncludeCount > 15) {
     throw new Error("Include stack exceeded. Did you include something recursively?");
@@ -125,18 +147,8 @@ Lucy.prototype.include = function(view, options) {
   options = options || {};
   options.loadImmediately = true;
   if (options.data) {
+    self.resolveAnswers(options.data.answers);
     self.actionViewPairs[options.data.action] = view;
-    for (q in options.data.answers) {
-      var answer = options.data.answers[q];
-      if (typeof answer !== 'object') {
-        options.data.answers[q] = self.language.literal(answer);
-        answer = {val: answer};
-      } else if (answer.variable) {
-        options.data.answers[q] = self.resolveVariable(answer.variable, self.language.html.variableJS);
-        answer = {serverInput: true}
-      }
-      self.answers.addAnswer(q, answer);
-    }
   }
   return self.language.app.includeView(view, options);
 }

@@ -68,7 +68,7 @@ PHP.html.variableJS = function(v) {
   return "<?php echo " + PHP.jsonEncode(PHP.variable(v)) + " ?>"; 
 }
 PHP.html.variableEscaped = function(v) {
-  return "<?php echo htmlspecialchars(" + PHP.variable(v) + " ?>";
+  return "<?php echo htmlspecialchars(" + PHP.variable(v) + ") ?>";
 }
 
 

@@ -3,4 +3,8 @@ test/golden/app/ruby/development.log
 test/golden/app/ruby/*.lock
 test/golden/app/ruby/log/
 test/golden/app/ruby/tmp/
+test/golden/app/*/ruby/development.log
+test/golden/app/*/ruby/*.lock
+test/golden/app/*/ruby/log/
+test/golden/app/*/ruby/tmp/
 swagger-codegen/

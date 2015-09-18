@@ -7,9 +7,11 @@ var Utils = require('../../utils.js');
 var App = module.exports = {
   startServer: function(opts) {return 'bin/rails server -b 0.0.0.0 -p ' + opts.port},
   getPartialFromViewName: function(v) {
-    return v.replace(/[A-Z][a-z]/g, function(whole) {
+    var ret = v.replace(/[A-Z][a-z]/g, function(whole) {
       return '_' + whole.toLowerCase();
     });
+    if (ret.indexOf('_') === 0) ret = ret.substring(1);
+    return ret;
   },
   includeView: function(view, options) {
     var code = ''
@@ -17,7 +19,7 @@ var App = module.exports = {
       code = EJS.render(App.templates.include, {view: view, options: options});
     } else {
       var resultStr = options.result ? ', :result => ' + options.result : '';
-      code += '<%= render "' + App.getPartialFromViewName(view).substring(1) + '.html.erb"' + resultStr + ' %>';
+      code += '<%= render "' + App.getPartialFromViewName(view) + '.html.erb"' + resultStr + ' %>';
     }
     return Utils.shift(code, options.indent);
   }
@@ -47,7 +49,7 @@ App.build = function(input, lucy, callback) {
     directory: true,
   })
   input.views.forEach(function(v) {
-    var partialName = App.getPartialFromViewName(v.name);
+    var partialName = '_' + App.getPartialFromViewName(v.name);
     var viewFile = {
       filename: 'app/views/main/' + partialName + '.html.erb',
       contents: v.code,

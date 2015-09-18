@@ -13,6 +13,12 @@ Utils.initializeLanguage(Node);
 Node.html.variableJS = function(v) {
   return '<%- JSON.stringify(' + Node.variable(v) + ') %>'
 }
+Node.html.variable = function(v) {
+  return '<%- ' + JS.variable(v) + ' %>';
+}
+Node.html.variableEscaped = function(v) {
+  return '<%= ' + JS.variable(v) + ' %>';
+}
 Node.returnCode = function(input) {
   return "res.render('" + input.clientFile + "', {request: req.body, result: " + input.ret + "})";
 }

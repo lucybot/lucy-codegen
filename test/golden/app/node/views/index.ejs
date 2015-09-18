@@ -21,5 +21,14 @@
       </script>
 
     </div>
+    <script>
+      $(".container").on('click', "a[data-action]", function(event) {
+        var el = $(event.target);
+        var action = el.attr('data-action');
+        var view = el.attr('data-view');
+        eval('var answers = ' + el.attr('data-answers'));
+        el.parent().load(action, answers);
+      })
+    </script>
   </body>
 </html>
