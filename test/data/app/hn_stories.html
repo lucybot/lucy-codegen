@@ -1,0 +1,7 @@
+<lucy for="storyID" in="result">
+  <h3>{{ storyID }}</h3>
+  <div id="#Item{{storyID}}"></div>
+  <lucy button="Load" type="success" action="getItem" view="showItem" target="#Item{{ storyID }}" inputvars="{itemID: storyID}">
+  </lucy>
+</lucy>
+
