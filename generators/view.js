@@ -7,54 +7,7 @@ var ParseJS = require('jsonic');
 var ESCAPE_REGEX =  /{{{([\s\S]*?)}}}/g;
 var VARIABLE_REGEX = /{{([\s\S]*?)}}/g;
 
-var EJS = {};
-EJS.tag = function(attrs, contents) {
-  if ('for' in attrs) {
-    return EJS.for(attrs) + contents + EJS.rof();
-  } else if ('if' in attrs) {
-    return EJS.if(attrs) + contents + EJS.fi();
-  } else if ('include' in attrs) {
-    return EJS.include(attrs);
-  } else if ('form' in attrs) {
-    return EJS.form(attrs) + contents + EJS.mrof(attrs);
-  } else {
-    throw new Error("<lucy> tag must have attribute if, for, or include")
-  }
-}
-EJS.variable = function(variable) {
-  return '<%- Lucy.variableHTML("' + variable.trim() + '") %>';
-}
-EJS.escapeVariable = function(variable) {
-  return '<%- Lucy.variableHTMLEscaped("' + variable.trim() + '") %>';
-}
-EJS.for = function(attrs) {
-  return '<%- Lucy.for("' + attrs.for.trim() + ' in ' + attrs.in.trim() + '") %>';
-}
-EJS.rof = function() { return "<%- Lucy.rof() %>" }
-EJS.if = function(attrs) {
-  return '<%- Lucy.if("' + attrs.if.trim() + '") %>'
-}
-EJS.fi = function() { return "<%- Lucy.fi() %>" }
-
-var getFormInput = function(attrs) {
-  var input = {
-    action: attrs.form.trim(),
-    vars: attrs.vars.split(',').map(function(v) {return v.trim()}),
-  }
-  return JSON.stringify(input);
-}
-EJS.form = function(attrs) {
-  return "<%- Lucy.form(" + getFormInput(attrs) + ") %>"
-}
-EJS.mrof = function(attrs) {
-  return "<%- Lucy.mrof(" + getFormInput(attrs) + ") %>"  
-}
-
-var unquote = function(str) { return str.replace(/\\"/g, '"'); }
-
-EJS.include = function(attrs) {
-  var ret = '<%- Lucy.include("' + attrs.include.trim().replace(/\W/g, '') + '"';
-  var useOptions = attrs.result || attrs.resultvar || attrs.action || attrs.inputs || attrs.inputvars;
+var parseOptions = function(attrs) {
   var options = {};
   if (attrs.resultvar) {
     options.result = attrs.resultvar;
@@ -70,6 +23,9 @@ EJS.include = function(attrs) {
   if (attrs.action) {
     options.data = options.data || {};
     options.data.action = attrs.action.replace(/\W/g, '');
+  }
+  if (attrs.view) {
+    options.view = attrs.view.replace(/\W/g, '');
   }
   if (attrs.inputs) {
     options.data = options.data || {};
@@ -90,7 +46,66 @@ EJS.include = function(attrs) {
   if (attrs.indent) {
     options.indent = parseInt(attrs.indent);
   }
+  return options;
+}
 
+var EJS = {};
+EJS.tag = function(attrs, contents) {
+  if ('for' in attrs) {
+    return EJS.for(attrs) + contents + EJS.rof();
+  } else if ('if' in attrs) {
+    return EJS.if(attrs) + contents + EJS.fi();
+  } else if ('include' in attrs) {
+    return EJS.include(attrs);
+  } else if ('form' in attrs) {
+    return EJS.form(attrs) + contents + EJS.mrof(attrs);
+  } else if ('button' in attrs) {
+    return EJS.button(attrs);
+  } else {
+    throw new Error("<lucy> tag must have attribute if, for, or include")
+  }
+}
+EJS.variable = function(variable) {
+  return '<%- Lucy.variableHTML("' + variable.trim() + '") %>';
+}
+EJS.escapeVariable = function(variable) {
+  return '<%- Lucy.variableHTMLEscaped("' + variable.trim() + '") %>';
+}
+EJS.for = function(attrs) {
+  return '<%- Lucy.for("' + attrs.for.trim() + ' in ' + attrs.in.trim() + '") %>';
+}
+EJS.rof = function() { return "<%- Lucy.rof() %>" }
+EJS.if = function(attrs) {
+  return '<%- Lucy.if("' + attrs.if.trim() + '") %>'
+}
+EJS.fi = function() { return "<%- Lucy.fi() %>" }
+
+EJS.button = function(attrs) {
+  var opts = parseOptions(attrs);
+  opts.button = attrs.button;
+  return '<%- Lucy.button(' + JSON.stringify(opts) + ') %>';
+}
+
+var getFormInput = function(attrs) {
+  var input = {
+    action: attrs.form.trim(),
+    vars: attrs.vars.split(',').map(function(v) {return v.trim()}),
+  }
+  return JSON.stringify(input);
+}
+EJS.form = function(attrs) {
+  return "<%- Lucy.form(" + getFormInput(attrs) + ") %>"
+}
+EJS.mrof = function(attrs) {
+  return "<%- Lucy.mrof(" + getFormInput(attrs) + ") %>"  
+}
+
+var unquote = function(str) { return str.replace(/\\"/g, '"'); }
+
+EJS.include = function(attrs) {
+  var ret = '<%- Lucy.include("' + attrs.include.trim().replace(/\W/g, '') + '"';
+  var useOptions = attrs.result || attrs.resultvar || attrs.action || attrs.inputs || attrs.inputvars;
+  var options = parseOptions(attrs);
   if (Object.keys(options).length > 0) ret += ', ' + JSON.stringify(options);
   ret += ') %>';
   return ret;

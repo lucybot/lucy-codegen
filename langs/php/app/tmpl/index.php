@@ -16,5 +16,14 @@
     <div class="container" style="margin-top:40px">
       <%- Lucy.include(input.main.view, {indent: 6, data: input.main.data, loadImmediately: true}) %>
     </div>
+    <script>
+      $(".container").on('click', "a[data-action]", function(event) {
+        var el = $(event.target);
+        var action = el.attr('data-action');
+        var view = el.attr('data-view');
+        eval('var answers = ' + el.attr('data-answers'));
+        el.parent().load(action + '.php', answers);
+      })
+    </script>
   </body>
 </html>

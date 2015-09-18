@@ -1,0 +1,14 @@
+<% result.each_index do | index | storyID = result.fetch(index) %>
+  <% if index < 10 %>
+    <div class="story">
+      <%= storyID %> 
+      <a class="btn btn-success"
+     data-action="getItem"
+     data-view="itemView"
+     data-answers="{itemID: <%= storyID %>}">
+     Load
+  </a>
+
+    </div>
+  <% end %>
+<% end %>
