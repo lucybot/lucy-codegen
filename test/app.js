@@ -42,9 +42,43 @@ var buildOpts = {
   },
 }
 
+var hnBuild = {
+  actions: {
+    getItem: {
+      all: readData('hn/actions/getItem.js')
+    },
+    getStories: {
+      all: readData('hn/actions/getStories.js')
+    }
+  },
+  views: {
+    item: {
+      all: readData('hn/views/Item.html')
+    },
+    stories: {
+      all: readData('hn/views/Stories.html')
+    }
+  },
+  main: {
+    view: 'getStories',
+    data: {
+      action: 'getStories'
+    }
+  }
+}
+
 describe('App Builder', function() {
   Object.keys(Langs).forEach(function(lang) {
     if (!Langs[lang].app) return;
+    it('should build HN app in ' + lang, function(done) {
+      var opts = JSON.parse(JSON.stringify(hnBuild));
+      opts.language = lang;
+      for (action in opts.actions) opts.actions[action][lang] = opts.actions[action].all;
+      for (view in opts.views) opts.views[view][lang] = opts.views[view].all;
+      App.build(opts, function(err, files) {
+      
+      })
+    })
     var opts = JSON.parse(JSON.stringify(buildOpts));
     opts.language = lang;
     for (action in opts.actions) {
@@ -83,3 +117,4 @@ describe('App Builder', function() {
     });
   });
 });
+
