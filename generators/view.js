@@ -1,5 +1,6 @@
 var View = module.exports = {};
 
+var Utils = require('../langs/utils.js');
 var HTMLParser = require('htmlparser2');
 var ParseJS = require('jsonic');
 
@@ -53,8 +54,12 @@ var EJS = {};
 EJS.tag = function(attrs, contents) {
   if ('for' in attrs) {
     return EJS.for(attrs) + contents + EJS.rof();
+  } else if ('condition' in attrs) {
+    return '';
   } else if ('if' in attrs) {
     return EJS.if(attrs) + contents + EJS.fi();
+  } else if ('else' in attrs) {
+    return EJS.else(attrs) + contents;
   } else if ('include' in attrs) {
     return EJS.include(attrs);
   } else if ('form' in attrs) {
@@ -79,6 +84,9 @@ EJS.if = function(attrs) {
   return '<%- Lucy.if("' + attrs.if.trim() + '") %>'
 }
 EJS.fi = function() { return "<%- Lucy.fi() %>" }
+EJS.else = function(attrs) {
+  return '<%- Lucy.else("' + attrs.else.trim() + '") %>'
+}
 
 EJS.button = function(attrs) {
   var opts = parseOptions(attrs);
@@ -140,6 +148,7 @@ View.translateToEJS = function(ltml, callback) {
         if (name === 'lucy') {
           var attrs = lucyTags.pop();
           var tag = EJS.tag(attrs, attrs.$content);
+          if ('else' in attrs) console.log('adding\n', tag);
           addContent(tag);
         } else {
           addContent('</' + name + '>')

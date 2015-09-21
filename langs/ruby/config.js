@@ -76,6 +76,9 @@ Ruby.rof = function(cond) {
 Ruby.if = function(cond) {
   return 'if ' + cond;
 }
+Ruby.else = function(cond) {
+  return 'else';
+}
 Ruby.fi = function(cond) {
   return 'end';
 }
@@ -86,7 +89,7 @@ var formatForClient = function(func) {
     return '<% ' + func(input) + ' %>';
   }
 }
-var toFormat = ['for', 'rof', 'if', 'fi']
+var toFormat = ['for', 'rof', 'if', 'fi', 'else']
 toFormat.forEach(function(f) {
   Ruby.html[f] = formatForClient(Ruby[f]);
 });

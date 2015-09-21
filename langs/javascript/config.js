@@ -60,6 +60,9 @@ JS.if = function(cond) {
 JS.fi = function(cond) {
   return '}'
 }
+JS.else = function(cond) {
+  return '} else {';
+}
 JS.variable = function(v) {
   return v;
 }
@@ -85,7 +88,7 @@ var formatForClient = function(func) {
     return '<% ' + func(input) + ' %>';
   }
 }
-var toFormat = ['for', 'rof', 'if', 'fi']
+var toFormat = ['for', 'rof', 'if', 'fi', 'else']
 toFormat.forEach(function(f) {
   JS.html[f] = formatForClient(JS[f]);
 });

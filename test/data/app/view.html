@@ -8,6 +8,12 @@
   <lucy if="index != 2">
     <h2>{{ index }}. {{ l.label }}</h2>
   </lucy>
+  <lucy if="l.label == 'Ruby'">
+    IF {{ l.label }}
+  <lucy else>
+    ELSE {{ l.label }}
+  </lucy>
+  </lucy>
 </lucy>
 <br><br>
 <h3>{{ answers.name }}</h3>

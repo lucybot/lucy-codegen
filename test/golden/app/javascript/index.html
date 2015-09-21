@@ -39,6 +39,12 @@
         <% if(index != 2) { %>
           <h2><%= index %>. <%= l.label %></h2>
         <% } %>
+        <% if(l.label == 'Ruby') { %>
+          IF <%= l.label %>
+        <% } else { %>
+          ELSE <%= l.label %>
+        
+        <% } %>
       <% }); %>
       <br></br><br></br>
       <h3>Lucy Goose</h3>

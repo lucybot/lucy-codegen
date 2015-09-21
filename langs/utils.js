@@ -61,8 +61,15 @@ Utils.replaceVars = function(str, varFunc) {
 Utils.addIndent = function(code, numSpaces) {
   if (!numSpaces) return code;
   var lines = code.split('\n');
-  var spaces = Array(numSpaces + 1).join(' ');
-  return lines.map(function(l) {return l ? spaces + l : l}).join('\n');
+  var spaces = Array(Math.abs(numSpaces) + 1).join(' ');
+  if (numSpaces > 0) {
+    return lines.map(function(l) {return l ? spaces + l : l}).join('\n');
+  } else {
+    return lines.map(function(l) {
+      if (l.indexOf(spaces) === 0) return l.substring(spaces.length);
+      else return l;
+    }).join('\n');
+  }
 }
 
 Utils.shift = function(code, numSpaces) {
