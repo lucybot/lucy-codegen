@@ -94,9 +94,12 @@ Utils.setRequestDefaults = function(params) {
   params.protocol = params.protocol || 'http';
   params.method = params.method || 'get';
   params.path = params.path || '/';
-  params.baseUrl = params.protocol + "://" + params.domain;
-  if (params.port) {
-    params.baseUrl += ':' + params.port;
+  params.baseUrl = '';
+  if (!params.relative) {
+    params.baseUrl = params.protocol + "://" + params.domain;
+    if (params.port) {
+      params.baseUrl += ':' + params.port;
+    }
   }
   if (params.path.indexOf('/') !== 0) {
     params.path = '/' + params.path;
