@@ -25,7 +25,6 @@ App.build = function(options, callback) {
   if (langOpts[options.language]) {
     language.setOptions(langOpts[options.language]);
   }
-  var lucy = new Lucy(language, options.answers);
   var ejsViews = {};
   Async.parallel(Object.keys(options.views).map(function(viewName) {
     if (viewName === 'setup') return function(callback) {
@@ -50,6 +49,7 @@ App.build = function(options, callback) {
     if (err) return callback(err);
     var actionArray = [];
     var viewArray = [];
+    var lucy = new Lucy(language, options.answers, {views: ejsViews, actions: options.actions});
     for (viewName in ejsViews) {
       var ejs = ejsViews[viewName][options.language];
       try {
