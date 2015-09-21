@@ -73,6 +73,7 @@ App.build = function(options, callback) {
           ret: toReturn,
           tabs: indent,
           clientFile: clientFile,
+          Lucy: lucy,
         });
       };
       try {
