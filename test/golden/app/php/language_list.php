@@ -8,6 +8,21 @@
   <?php if($index != 2) { ?>
     <h2><?php echo $index ?>. <?php echo $l->label ?></h2>
   <?php } ?>
+  <?php if($l->label == 'Ruby') { ?>
+    IF <?php echo $l->label ?>
+    <?php if($index == 0) { ?>
+      ZERO
+    <?php } else { ?>
+      NONZERO
+    <?php } ?>
+  <?php } else { ?>
+    ELSE <?php echo $l->label ?>
+    <?php if($index == 0) { ?>
+      ZERO
+    <?php } else { ?>
+      NONZERO
+    <?php } ?>
+  <?php } ?>
 <?php } ?>
 <br></br><br></br>
 <h3>Lucy Goose</h3>

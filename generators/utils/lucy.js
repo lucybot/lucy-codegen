@@ -105,7 +105,6 @@ Lucy.prototype.for = function(iter) {
   iter.group = self.resolveVariable(iter.group);
   return self.language.html.for(iter);
 }
-
 Lucy.prototype.rof = function(iter) {
   return self.language.html.rof(iter);
 }
@@ -115,9 +114,12 @@ Lucy.prototype.if = function(cond) {
   cond = LUtils.replaceVars(cond, self.resolveVariable);
   return self.language.html.if(cond);
 }
-
 Lucy.prototype.fi = function(cond) {
   return self.language.html.fi(cond);
+}
+
+Lucy.prototype.else = function(cond) {
+  return self.language.html.else(cond);
 }
 
 Lucy.prototype.answer = function(question) {

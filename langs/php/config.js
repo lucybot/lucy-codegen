@@ -47,6 +47,9 @@ PHP.rof = function(cond) {
 PHP.if = function(cond) {
   return "if(" + cond + ") {"
 }
+PHP.else = function(cond) {
+  return '} else {';
+}
 PHP.fi = function(cond) {
   return "}"
 }
@@ -57,7 +60,7 @@ var formatForClient = function(func) {
     return '<?php ' + func(input) + ' ?>';
   }
 }
-var toFormat = ['for', 'rof', 'if', 'fi']
+var toFormat = ['for', 'rof', 'if', 'fi', 'else']
 toFormat.forEach(function(f) {
   PHP.html[f] = formatForClient(PHP[f]);
 });

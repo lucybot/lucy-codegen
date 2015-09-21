@@ -8,6 +8,21 @@
   <% if index != 2 %>
     <h2><%= index %>. <%= l["label"] %></h2>
   <% end %>
+  <% if l["label"] == 'Ruby' %>
+    IF <%= l["label"] %>
+    <% if index == 0 %>
+      ZERO
+    <% else %>
+      NONZERO
+    <% end %>
+  <% else %>
+    ELSE <%= l["label"] %>
+    <% if index == 0 %>
+      ZERO
+    <% else %>
+      NONZERO
+    <% end %>
+  <% end %>
 <% end %>
 <br></br><br></br>
 <h3>Lucy Goose</h3>
