@@ -7,13 +7,12 @@ var AnswerSet = require('./answer-set.js');
 
 var self = null;
 
-var Lucy = function(language, answers, templates) {
+var Lucy = function(language, answers) {
   self = this;
   self.resultVars = ['result'];
   self.language = language;
   self.answers = new AnswerSet(answers || {}, self);
   self.actionViewPairs = {};
-  self.templates = templates;
   self.IncludeCount = 0;
 }
 
@@ -149,8 +148,6 @@ Lucy.prototype.include = function(view, options) {
   }
   options = options || {};
   options.loadImmediately = true;
-  options.templates = self.templates;
-  options.lucy = self;
   if (options.data) {
     self.resolveAnswers(options.data.answers);
     self.actionViewPairs[options.data.action] = view;

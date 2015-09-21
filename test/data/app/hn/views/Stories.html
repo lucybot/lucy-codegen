@@ -1,20 +1,15 @@
 <lucy for="storyID" in="result">
-  <lucy if="index == 0">
-    <lucy include="item" action="getItem" inputvars="{itemID: storyID}" indent="4">
-    </lucy>
-    <lucy else>
-      <lucy if="index < 10">
-        <div class="story">
-          {{ storyID }}&nbsp;
-          <lucy button="Load"
-                type="success"
-                action="getItem"
-                view="item"
-                inputvars="{itemID: storyID}"
-                indent="10">
-          </lucy>
-        </div>
+  <lucy if="index < 10">
+    <div class="story">
+      {{ storyID }}&nbsp;
+      <lucy button="Load"
+            type="success"
+            action="getItem"
+            view="item"
+            inputvars="{itemID: storyID}"
+            indent="2">
       </lucy>
-    </lucy>
+    </div>
   </lucy>
 </lucy>
+

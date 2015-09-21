@@ -10,10 +10,10 @@ var App = module.exports = {
     if (options.data) {
       code = EJS.render(App.templates.include, {view: view, options: options});
     } else {
-      if (options.result) {
-        code += '<?php $result = $' + options.result + '; ?>';
-      }
-      code += EJS.render(options.templates.views[view].php, {Lucy: options.lucy});
+      code += '<?php\n'
+      if (options.result) code += '  $result = $' + options.result + ';\n'
+      code += '  require "' + view + '.php";\n';
+      code += '?>'
     }
     return Utils.shift(code, options.indent);
   }
