@@ -9,7 +9,7 @@ curl_setopt($curl, CURLOPT_URL,
   "https://api.lucybot.com/v1/sample_code/languages"
 );
 $result = json_decode(curl_exec($curl));
-$result = (object)$result;
+$result = (object) $result;
 ?>
 <?php foreach($result as $index=>$l) { ?>
   <?php if($l->foo) { ?>
