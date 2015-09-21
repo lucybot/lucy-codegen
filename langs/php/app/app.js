@@ -13,7 +13,7 @@ var App = module.exports = {
       if (options.result) {
         code += '<?php $result = $' + options.result + '; ?>';
       }
-      code += options.templates.views[view].php;
+      code += EJS.render(options.templates.views[view].php, {Lucy: options.lucy});
     }
     return Utils.shift(code, options.indent);
   }

@@ -150,6 +150,7 @@ Lucy.prototype.include = function(view, options) {
   options = options || {};
   options.loadImmediately = true;
   options.templates = self.templates;
+  options.lucy = self;
   if (options.data) {
     self.resolveAnswers(options.data.answers);
     self.actionViewPairs[options.data.action] = view;
