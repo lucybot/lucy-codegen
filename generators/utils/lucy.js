@@ -144,7 +144,7 @@ Lucy.prototype.resolveAnswers = function(answers, varFunc) {
 }
 
 Lucy.prototype.include = function(view, options) {
-  if (++self.IncludeCount > 15) {
+  if (++self.IncludeCount > 50) {
     throw new Error("Include stack exceeded. Did you include something recursively?");
   }
   options = options || {};
