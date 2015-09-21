@@ -85,9 +85,11 @@ PHP.join = function(variable, on) {
   return "implode('" + on + "', " + variable + ")";
 }
 PHP.returnCode = function(input) {
-  var assign = '$result = (object)' + input.ret + ';\n';
-  ret = assign + PHP.redirect({redirectPath: input.clientFile + '.php'}) + ";";
-  return Utils.addIndent(ret, input.tabs);
+  var assign = '$result = (object)' + input.ret + ';\n?>\n';
+  ret = Utils.addIndent(assign, input.tabs) +
+      input.Lucy.include(input.clientFile, input) +
+      Utils.addIndent('\n<?php');
+  return ret;
 }
 PHP.userInput = function(input) {
   return '$_POST["' + input.question + '"]';
