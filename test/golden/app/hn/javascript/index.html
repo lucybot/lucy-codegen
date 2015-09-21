@@ -45,17 +45,29 @@
 
     <script id="stories-template" type="text/x-underscore-template" style="display: none">
       <% result.forEach(function(storyID, index) { %>
-        <% if(index < 10) { %>
-          <div class="story">
-            <%= storyID %> 
-            <a class="btn btn-success"
-           data-action="getItem"
-           data-view="itemView"
-           data-answers="{itemID: <%= storyID %>}">
-           Load
-        </a>
+        <% if(index == 0) { %>
+          <div id="getItem-result"></div>
+          <%
+            getItem({
+                 'itemID': storyID,
+            }, function(result) {
+              $('#getItem-result').replaceWith(itemView({result: result}))
+            })
+          %>
 
-          </div>
+        <% } else { %>
+          <% if(index < 10) { %>
+            <div class="story">
+              <%= storyID %> 
+              <a class="btn btn-success"
+                   data-action="getItem"
+                   data-view="itemView"
+                   data-answers="{itemID: <%= storyID %>}">
+                   Load
+                </a>
+
+            </div>
+          <% } %>
         <% } %>
       <% }); %>
     </script>
