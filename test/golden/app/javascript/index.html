@@ -41,9 +41,18 @@
         <% } %>
         <% if(l.label == 'Ruby') { %>
           IF <%= l.label %>
+          <% if(index == 0) { %>
+            ZERO
+          <% } else { %>
+            NONZERO
+          <% } %>
         <% } else { %>
           ELSE <%= l.label %>
-        
+          <% if(index == 0) { %>
+            ZERO
+          <% } else { %>
+            NONZERO
+          <% } %>
         <% } %>
       <% }); %>
       <br></br><br></br>

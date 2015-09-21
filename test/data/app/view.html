@@ -10,9 +10,21 @@
   </lucy>
   <lucy if="l.label == 'Ruby'">
     IF {{ l.label }}
-  <lucy else>
-    ELSE {{ l.label }}
-  </lucy>
+    <lucy if="index == 0">
+      ZERO
+      <lucy else>
+        NONZERO
+      </lucy>
+    </lucy>
+    <lucy else>
+      ELSE {{ l.label }}
+      <lucy if="index == 0">
+        ZERO
+        <lucy else>
+          NONZERO
+        </lucy>
+      </lucy>
+    </lucy>
   </lucy>
 </lucy>
 <br><br>
