@@ -7,8 +7,5 @@ curl_setopt($curl, CURLOPT_URL,
 );
 $result = json_decode(curl_exec($curl));
 $result = (object)$result;
-?>
-<h2><?php echo $result->title ?></h2>
-
-<?php
+require 'item.php';
 ?>
