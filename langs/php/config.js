@@ -85,10 +85,11 @@ PHP.join = function(variable, on) {
   return "implode('" + on + "', " + variable + ")";
 }
 PHP.returnCode = function(input) {
-  var assign = '$result = (object)' + input.ret + ';\n?>\n';
+  var assign = '$result = (object) ' + input.ret + ';';
   ret = Utils.addIndent(assign, input.tabs) +
+      '\n?>\n' +
       input.Lucy.include(input.clientFile, input) +
-      Utils.addIndent('\n<?php');
+      '\n<?php\n';
   return ret;
 }
 PHP.userInput = function(input) {

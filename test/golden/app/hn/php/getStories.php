@@ -6,7 +6,7 @@ curl_setopt($curl, CURLOPT_URL,
   "https://hacker-news.firebaseio.com/v0/topstories.json"
 );
 $result = json_decode(curl_exec($curl));
-$result = (object)$result;
+$result = (object) $result;
 ?>
 <?php foreach($result as $index=>$storyID) { ?>
   <?php if($index == 0) { ?>
