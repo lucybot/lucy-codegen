@@ -1,14 +1,28 @@
 <% result.forEach(function(storyID, index) { %>
-  <% if(index < 10) { %>
-    <div class="story">
-      <%- storyID %> 
-      <a class="btn btn-success"
-     data-action="getItem"
-     data-view="itemView"
-     data-answers="{itemID: <%- storyID %>}">
-     Load
-  </a>
+  <% if(index == 0) { %>
+    <div class="item"></div>
+    <script>
+      var element = $('.item').last();
+      element[0].loadData = function() {
+        $('.item').last().load('getItem', {
+           itemID: <%- JSON.stringify(storyID) %>,
+        });
+      }
+      element[0].loadData();
+    </script>
 
-    </div>
+  <% } else { %>
+    <% if(index < 10) { %>
+      <div class="story">
+        <%- storyID %> 
+        <a class="btn btn-success"
+             data-action="getItem"
+             data-view="itemView"
+             data-answers="{itemID: <%- storyID %>}">
+             Load
+          </a>
+
+      </div>
+    <% } %>
   <% } %>
 <% }); %>

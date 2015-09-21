@@ -164,7 +164,6 @@ View.translateToEJS = function(ltml, callback) {
             if (tag.match(/\n\s*$/)) tag = tag.substring(0, tag.lastIndexOf('\n'));
             tag = Utils.addIndent(tag, -2);
             removeContent('  ');
-            console.log('adding\n', tag);
           }
           addContent(tag);
         } else {
