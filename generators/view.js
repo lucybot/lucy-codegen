@@ -1,6 +1,6 @@
 var View = module.exports = {};
 
-var Beautify = require('js-beautify').html;
+var Beautify = require('js-beautify');
 var Utils = require('../langs/utils.js');
 var HTMLParser = require('htmlparser2');
 var ParseJS = require('jsonic');
@@ -113,25 +113,25 @@ EJS.mrof = function(attrs) {
 var unquote = function(str) { return str.replace(/\\"/g, '"'); }
 
 EJS.include = function(attrs) {
-  var ret = '<%- Lucy.include("' + attrs.include.trim().replace(/\W/g, '') + '"';
+  var ejs = '<%- Lucy.include("' + attrs.include.trim().replace(/\W/g, '') + '"';
   var useOptions = attrs.result || attrs.resultvar || attrs.action || attrs.inputs || attrs.inputvars;
   var options = parseOptions(attrs);
-  if (Object.keys(options).length > 0) ret += ', ' + JSON.stringify(options);
-  ret += ') %>';
-  return ret;
+  if (Object.keys(options).length > 0) ejs += ', ' + JSON.stringify(options);
+  ejs += ') %>';
+  return ejs;
 }
 
 View.translateToEJS = function(ltml, callback) {
-  var ret = '';
+  var ejs = '';
   var lucyTags = [];
   var addContent = function(text) {
-    if (lucyTags.length === 0) ret += text;
+    if (lucyTags.length === 0) ejs += text;
     else lucyTags[lucyTags.length - 1].$content += text;
   }
   var removeContent = function(text) {
     if (lucyTags.length === 0) {
-      if (ret.lastIndexOf(text) === ret.length - text.length) {
-        ret = ret.substring(0, ret.length - text.length);
+      if (ejs.lastIndexOf(text) === ejs.length - text.length) {
+        ejs = ejs.substring(0, ejs.length - text.length);
       }
     } else {
       var tag = lucyTags[lucyTags.length - 1];
@@ -172,16 +172,17 @@ View.translateToEJS = function(ltml, callback) {
         }
       }
   }, {decodeEntities: true});
-  ltml = Beautify(ltml, {indent_size: 2});
+  ltml = Beautify.html(ltml, {indent_size: 2, unformatted: ['script']});
   parser.write(ltml);
-  parser.end();
-  ret = ret
+
+  ejs = ejs
   .replace(ESCAPE_REGEX, function(whole, variable) {
     return EJS.escapeVariable(variable);
   })
   .replace(VARIABLE_REGEX, function(whole, variable) {
     return EJS.variable(variable);
   });
-  if (callback) callback(null, ret);
+  parser.end();
+  if (callback) callback(null, ejs);
 }
 
