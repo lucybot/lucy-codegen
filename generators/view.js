@@ -183,6 +183,5 @@ View.translateToEJS = function(ltml, callback) {
     return EJS.variable(variable);
   });
   if (callback) callback(null, ret);
-  return ret;
 }
 
