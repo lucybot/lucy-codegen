@@ -134,7 +134,7 @@ View.translateToEJS = function(ltml, callback) {
       }
     } else {
       var tag = lucyTags[lucyTags.length - 1];
-      if (tag.$content.lastIndexOf(text === tag.$content.lenth - text.length)) {
+      if (tag.$content.lastIndexOf(text) === (tag.$content.length - text.length)) {
         tag.$content =  tag.$content.substring(0, tag.$content.length - text.length);
       }
     }
