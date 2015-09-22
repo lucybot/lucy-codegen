@@ -8,7 +8,10 @@ describe('EJS translation', function() {
       '<h2>Hello World</h2>\n' +
       '<p>hola</p>';
     var ejs = ltml;
-    Expect(translateToEJS(ltml)).to.equal(ejs);
+    translateToEJS(ltml, function(err, out) {
+      Expect(err).to.equal(null)
+      Expect(out).to.equal(ejs);
+    });
   });
 
   it('should change if tag', function() {
@@ -20,7 +23,10 @@ describe('EJS translation', function() {
       '<%- Lucy.if("foo") %>\n' +
       '  <h2>FOO!!</h2>\n' +
       '<%- Lucy.fi() %>';
-    Expect(translateToEJS(ltml)).to.equal(ejs);
+    translateToEJS(ltml, function(err, out) {
+      Expect(err).to.equal(null)
+      Expect(out).to.equal(ejs);
+    });
   });
 
   it('should change for tag', function() {
@@ -32,7 +38,10 @@ describe('EJS translation', function() {
       '<%- Lucy.for("thing in things") %>\n' +
       '  <h2><%- Lucy.variableHTML("index") %></h2>\n' +
       '<%- Lucy.rof() %>'
-    Expect(translateToEJS(ltml)).to.equal(ejs);
+    translateToEJS(ltml, function(err, out) {
+      Expect(err).to.equal(null)
+      Expect(out).to.equal(ejs);
+    });
   });
 
   it('should change include', function() {
@@ -55,7 +64,10 @@ describe('EJS translation', function() {
     var ejs =
       '<%- Lucy.include("myView", {"result":"foo"}) %>\n' +
       '<%- Lucy.include("myView", ' + JSON.stringify(includeOptions) + ') %>';
-    Expect(translateToEJS(ltml)).to.equal(ejs);
+    translateToEJS(ltml, function(err, out) {
+      Expect(err).to.equal(null)
+      Expect(out).to.equal(ejs);
+    });
   });
 
   it('should allow quotes in attrubutes', function() {
@@ -77,7 +89,10 @@ describe('EJS translation', function() {
       }
     }
     var ejs = '<%- Lucy.include("myView", ' + JSON.stringify(includeOptions) + ') %>';
-    Expect(translateToEJS(ltml)).to.equal(ejs);
+    translateToEJS(ltml, function(err, out) {
+      Expect(err).to.equal(null)
+      Expect(out).to.equal(ejs);
+    });
   });
 
   it('should preserve inner tags and attrs', function() {
@@ -97,7 +112,10 @@ describe('EJS translation', function() {
       '    <p class="small">small</p>\n' +
       '  </div>\n' +
       '<%- Lucy.rof() %>'
-    Expect(translateToEJS(ltml)).to.equal(ejs);
+    translateToEJS(ltml, function(err, out) {
+      Expect(err).to.equal(null)
+      Expect(out).to.equal(ejs);
+    });
   })
 
   it('should handle sibling tags', function() {
@@ -107,7 +125,10 @@ describe('EJS translation', function() {
     var ejs =
       '<%- Lucy.if("foo") %><%- Lucy.fi() %>\n' +
       '<%- Lucy.if("bar") %><%- Lucy.fi() %>';
-    Expect(translateToEJS(ltml)).to.equal(ejs);
+    translateToEJS(ltml, function(err, out) {
+      Expect(err).to.equal(null)
+      Expect(out).to.equal(ejs);
+    });
   });
 
   it('should handle nested tags', function() {
@@ -127,7 +148,10 @@ describe('EJS translation', function() {
       '  <%- Lucy.fi() %>\n' +
       '  End Thing\n' + 
       '<%- Lucy.rof() %>'
-    Expect(translateToEJS(ltml)).to.equal(ejs);
+    translateToEJS(ltml, function(err, out) {
+      Expect(err).to.equal(null)
+      Expect(out).to.equal(ejs);
+    });
   });
 
   it('should handle complex nesting and siblings', function() {
@@ -161,7 +185,10 @@ describe('EJS translation', function() {
       '    <%- Lucy.if("nine") %><%- Lucy.fi() %>\n' +
       '  <%- Lucy.fi() %>\n' +
       '<%- Lucy.fi() %>';
-    Expect(translateToEJS(ltml)).to.equal(ejs);
+    translateToEJS(ltml, function(err, out) {
+      Expect(err).to.equal(null)
+      Expect(out).to.equal(ejs);
+    });
   });
 
   it('should throw errors for bad js objects in include', function() {

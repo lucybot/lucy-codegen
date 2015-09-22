@@ -1,5 +1,6 @@
 var View = module.exports = {};
 
+var Beautify = require('js-beautify').html;
 var Utils = require('../langs/utils.js');
 var HTMLParser = require('htmlparser2');
 var ParseJS = require('jsonic');
@@ -171,6 +172,7 @@ View.translateToEJS = function(ltml, callback) {
         }
       }
   }, {decodeEntities: true});
+  ltml = Beautify(ltml, {indent_size: 2});
   parser.write(ltml);
   parser.end();
   ret = ret
@@ -181,6 +183,5 @@ View.translateToEJS = function(ltml, callback) {
     return EJS.variable(variable);
   });
   if (callback) callback(null, ret);
-  return ret;
 }
 
