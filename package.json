@@ -20,6 +20,7 @@
     "deep-extend": "^0.4.0",
     "ejs": "~2.3.3",
     "htmlparser2": "~3.8.3",
+    "js-beautify": "^1.5.10",
     "jsonic": "~0.2.2",
     "underscore": "~1.8.3"
   }
