@@ -30,20 +30,18 @@ App.build = function(input, lucy, callback) {
   }
   input.actions.forEach(function(action, index) {
     ejsInput.actionIdx = index;
-    var actionFile = {
+    var actionFile = action.actionFile = {
       filename: action.name + '.php',
       contents: EJS.render(App.templates.action, ejsInput),
       snippets: {},
     };
-    
-    actionFile.snippets[action.name] = '<?php\n' + action.code + '\n?>';
-    actionFile.contents = actionFile.contents.replace(/<\?php\s*\?>/, '');
-    actionFile.snippets[action.name] = actionFile.snippets[action.name].replace(/<\?php\s*\?>/, '');
+    actionFile.snippets[action.name] = '<?php\n' + Utils.indent(action.code, 2) + '\n?>';
 
-    if (input.setup) actionFile.snippets.setup = '<?php\n' + input.setup.code + '\n?>';
+    if (input.setup) actionFile.snippets.setup = '<?php\n' + Utils.indent(input.setup.code, 2) + '\n?>';
     files.push(actionFile);
   });
-  delete ejsInput.actionInput;
+  delete ejsInput.actionIdx;
+
   input.views.forEach(function(view, index) {
     ejsInput.viewIdx = index;
     var viewFile = {
@@ -52,9 +50,21 @@ App.build = function(input, lucy, callback) {
       snippets: {},
     }
     viewFile.snippets[view.name] = view.code;
-    files.push(viewFile);
+    var copiedToAction = false;
+    if (!input.languageOptions.useViewRedirect) {
+      input.actions.forEach(function(a) {
+        if (a.view === view.name) {
+          copiedToAction = true;
+          a.actionFile.contents += '\n' + viewFile.contents;
+          a.actionFile.snippets[view.name] = viewFile.snippets[view.name];
+        }
+      })
+    }
+    if (!copiedToAction) files.push(viewFile);
   });
   delete ejsInput.viewIdx;
+
+
   for (filename in input.staticFiles) {
     var staticFile = {
       filename: filename + '.php',
