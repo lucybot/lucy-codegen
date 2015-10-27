@@ -13,11 +13,9 @@
     <div class="container" style="margin-top:40px">
       <div class="stories"></div>
       <script>
-        var element = $('.stories').last();
-        element[0].loadData = function() {
-          $('.stories').last().load('getStories.php');
-        }
-        element[0].loadData();
+        var element = $('.stories:empty').first();
+        element.html('loading...');
+        element.load('getStories.php');
       </script>
 
     </div>

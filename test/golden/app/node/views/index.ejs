@@ -13,11 +13,9 @@
     <div class="container" style="margin-top:40px">
       <div class="language_list"></div>
       <script>
-        var element = $('.language_list').last();
-        element[0].loadData = function() {
-          $('.language_list').last().load('get_languages', {});
-        }
-        element[0].loadData();
+        var element = $('.language_list:empty').first();
+        element.html('loading...');
+        element.load('get_languages', {});
       </script>
 
     </div>

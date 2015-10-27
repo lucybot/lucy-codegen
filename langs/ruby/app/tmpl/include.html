@@ -1,22 +1,18 @@
 <div class="<%- view %>"></div>
 <script>
-  var element = $('.<%- view %>').last();
-  element[0].loadData = function() {
+  var element = $('.<%- view %>:empty').first();
+  element.html('loading...');
 <% if (options.data) { -%>
 <% if (!options.data.answers || Object.keys(options.data.answers).length === 0) { -%>
-    $('.<%- view %>').last().load('<%- options.data.action %>'<%- !options.method || options.method === 'post' ? ', {}' : '' %>);
+  element.load('<%- options.data.action %>'<%- !options.method || options.method === 'post' ? ', {}' : '' %>);
 <% } else { -%>
-    $('.<%- view %>').last().load('<%- options.data.action %>', {
+  element.load('<%- options.data.action %>', {
 <%   for (var answer in options.data.answers) { -%>
-       <%- answer %>: <%- options.data.answers[answer] %>,
+    <%- answer %>: <%- options.data.answers[answer] %>,
 <%   } -%>
     });
 <% } -%>
 <% } else { -%>
-    $('.<%- view %>').last().load('<%- view %>');
-<% } -%>
-  }
-<% if (options.loadImmediately) { -%>
-  element[0].loadData();
+  element.load('<%- view %>');
 <% } -%>
 </script>

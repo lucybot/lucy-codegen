@@ -2,13 +2,11 @@
   <% if index == 0 %>
     <div class="item"></div>
     <script>
-      var element = $('.item').last();
-      element[0].loadData = function() {
-        $('.item').last().load('getItem', {
-           itemID: <%== storyID.to_json %>,
+      var element = $('.item:empty').first();
+      element.html('loading...');
+      element.load('getItem', {
+        itemID: <%== storyID.to_json %>,
         });
-      }
-      element[0].loadData();
     </script>
 
   <% else %>

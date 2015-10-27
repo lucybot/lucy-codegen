@@ -2,13 +2,11 @@
   <% if(index == 0) { %>
     <div class="item"></div>
     <script>
-      var element = $('.item').last();
-      element[0].loadData = function() {
-        $('.item').last().load('getItem', {
-           itemID: <%- JSON.stringify(storyID) %>,
-        });
-      }
-      element[0].loadData();
+      var element = $('.item:empty').first();
+      element.html('loading...');
+      element.load('getItem', {
+        itemID: <%- JSON.stringify(storyID) %>,
+      });
     </script>
 
   <% } else { %>

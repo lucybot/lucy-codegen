@@ -12,13 +12,11 @@
   <?php if($index == 0) { ?>
     <div class="item"></div>
     <script>
-      var element = $('.item').last();
-      element[0].loadData = function() {
-        $('.item').last().load('getItem.php', {
-           itemID: <?php echo json_encode($storyID) ?>,
-        });
-      }
-      element[0].loadData();
+      var element = $('.item:empty').first();
+      element.html('loading...');
+      element.load('getItem.php', {
+        itemID: <?php echo json_encode($storyID) ?>,
+      });
     </script>
 
   <?php } else { ?>
