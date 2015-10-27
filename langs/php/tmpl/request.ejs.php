@@ -17,6 +17,12 @@ curl_setopt($curl, CURLOPT_URL,
 <% if (req.body) { -%>
 <%   if (req.contentType === 'application/json') { -%>
 curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode(<%- req.body %>));
+<%   } else if (req.bodyFormat === 'form') { -%>
+$post_data = <%- req.body %>;
+foreach ($post_data as $key => $value) {
+  $post_items[] = $key . '=' . $value;
+}
+curl_setopt($curl, CURLOPT_POSTFIELDS, implode('&', $post_items));
 <%   } else { -%>
 curl_setopt($curl, CURLOPT_POSTFIELDS, <%- req.body %>);
 <%   } -%>

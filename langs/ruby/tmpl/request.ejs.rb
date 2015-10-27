@@ -14,6 +14,8 @@ request = Net::HTTP::<%- req.method.charAt(0).toUpperCase() + req.method.substri
 <% if (req.body) { -%>
 <%   if (req.contentType === 'application/json') { -%>
 request.body = <%- req.body %>.to_json
+<%   } else if (req.bodyFormat === 'form') { -%>
+request.set_form_data(<%- req.body %>)
 <%   } else { -%>
 request.body = <%- req.body %>
 <%   } -%>

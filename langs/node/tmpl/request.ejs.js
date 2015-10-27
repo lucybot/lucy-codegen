@@ -9,6 +9,8 @@ request.<%- (req.method || 'get').toLowerCase() %>({
 <% if (req.body) { -%>
 <%   if (req.contentType === 'application/json') { -%>
   body: JSON.stringify(<%- shift(req.body, 2) %>),
+<%   } else if (req.bodyFormat === 'form') { -%>
+  formData: <%- shift(req.body, 2) -%>,
 <%   } else { -%>
   body: <%- shift(req.body, 2) %>,
 <%   } -%>
