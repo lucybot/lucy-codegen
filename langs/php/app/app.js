@@ -34,8 +34,8 @@ App.build = function(input, lucy, callback) {
       contents: EJS.render(App.templates.action, ejsInput),
       snippets: {},
     };
-    actionFile.snippets[action.name] = action.code;
-    if (input.setup) actionFile.snippets.setup = input.setup.code;
+    actionFile.snippets[action.name] = '<?php\n' + action.code + '\n?>';
+    if (input.setup) actionFile.snippets.setup = '<?php\n' + input.setup.code + '\n?>';
     files.push(actionFile);
   });
   delete ejsInput.actionInput;
