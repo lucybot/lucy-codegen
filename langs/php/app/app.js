@@ -13,7 +13,8 @@ var App = module.exports = {
       if (options.result) {
         code += '<?php $result = $' + options.result + '; ?>';
       }
-      code += EJS.render(options.templates.views[view].php, {Lucy: options.lucy});
+      var viewCode = EJS.render(options.templates.views[view].php, {Lucy: options.lucy});
+      code += viewCode;
     }
     return Utils.shift(code, options.indent);
   }
@@ -34,7 +35,11 @@ App.build = function(input, lucy, callback) {
       contents: EJS.render(App.templates.action, ejsInput),
       snippets: {},
     };
+    
     actionFile.snippets[action.name] = '<?php\n' + action.code + '\n?>';
+    actionFile.contents = actionFile.contents.replace(/<\?php\s*\?>/, '');
+    actionFile.snippets[action.name] = actionFile.snippets[action.name].replace(/<\?php\s*\?>/, '');
+
     if (input.setup) actionFile.snippets.setup = '<?php\n' + input.setup.code + '\n?>';
     files.push(actionFile);
   });

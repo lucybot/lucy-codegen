@@ -36,5 +36,4 @@ $result = (object) $result;
     <?php } ?>
   <?php } ?>
 <?php } ?>
-<?php
-?>
+
