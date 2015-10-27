@@ -1,7 +1,7 @@
 <?php
 <% if (input.setup) { -%>
-<%- input.setup.code %>
-<% } -%>
+  <%- shift(input.setup.code, 2) %>
 
-<%- input.actions[actionIdx].code %>
+<% } -%>
+  <%- shift(input.actions[actionIdx].code, 2) %>
 ?>

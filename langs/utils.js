@@ -72,6 +72,8 @@ Utils.addIndent = function(code, numSpaces) {
   }
 }
 
+Utils.indent = Utils.addIndent;
+
 Utils.shift = function(code, numSpaces) {
   if (!numSpaces) return code;
   var lines = code.split('\n');

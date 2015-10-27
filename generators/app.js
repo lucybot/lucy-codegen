@@ -81,6 +81,7 @@ App.build = function(options, callback) {
           name: actionName,
           code: EJS.render(ejs, {Lucy: lucy}).trim(),
           forceServer: action.forceServer,
+          view: action.view,
         }
       } catch (e) {
         console.log(ejs);

@@ -7,6 +7,9 @@ var PHP = module.exports = {
     extension: '.php',
     comment: function(str) { return '// ' + str },
     nulltype: 'null',
+    options: {
+      useViewRedirect: {default: false}
+    }
 };
 
 Utils.initializeLanguage(PHP);
@@ -85,12 +88,11 @@ PHP.join = function(variable, on) {
   return "implode('" + on + "', " + variable + ")";
 }
 PHP.returnCode = function(input) {
-  var assign = '$result = (object) ' + input.ret + ';';
-  ret = Utils.addIndent(assign, input.tabs) +
-      '\n?>\n' +
-      input.Lucy.include(input.clientFile, input) +
-      '\n<?php\n';
-  return ret;
+  var ret = '$result = (object) ' + input.ret + ';';
+  if (PHP.options.useViewRedirect.value) {
+    ret += '\n' + PHP.redirect({redirectPath: input.clientFile + '.php'}) + ";";
+  }
+  return Utils.addIndent(ret, input.tabs);
 }
 PHP.userInput = function(input) {
   return '$_POST["' + input.question + '"]';
