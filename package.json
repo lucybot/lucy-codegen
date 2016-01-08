@@ -1,6 +1,6 @@
 {
   "name": "lucy-codegen",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Code Generation in multiple languages",
   "main": "index.js",
   "scripts": {
