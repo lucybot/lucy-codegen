@@ -49,7 +49,7 @@ Java.literal = function(v, numSpaces, shallow) {
 }
 
 Java.for = function(iter) {
-  return iter.group + '.forEach(function(' + iter.iterator + ', index) {';
+  return "for(" + iter.type + " " + iter.iterator + " : " + iter.group + ")"
 }
 Java.rof = function(iter) {
   return '});'
