@@ -2,11 +2,12 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var busboy = require('busboy');
 var request = require('request');
+var app = express();
+
 <% if (input.setup) { -%>
 <%- input.setup.code %>
 <% } -%>
 
-var app = express();
 app.use('/', express.static(__dirname + '/www'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
