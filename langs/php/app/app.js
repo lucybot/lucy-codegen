@@ -13,7 +13,9 @@ var App = module.exports = {
       if (options.result) {
         code += '<?php $result = $' + options.result + '; ?>';
       }
-      var viewCode = EJS.render(options.templates.views[view].php, {Lucy: options.lucy});
+      var tmpl = options.templates.views[view];
+      if (!tmpl) throw new Error("View " + view + " not found");
+      var viewCode = EJS.render(tmpl.php, {Lucy: options.lucy});
       code += viewCode;
     }
     return Utils.shift(code, options.indent);
