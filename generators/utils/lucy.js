@@ -3,6 +3,7 @@ var Path = require('path');
 var EJS = require('ejs');
 
 var LUtils = require('../../langs/utils.js');
+var Languages = require('../../langs/langs.js');
 var AnswerSet = require('./answer-set.js');
 
 var self = null;
@@ -11,6 +12,7 @@ var Lucy = function(language, answers, templates) {
   self = this;
   self.resultVars = ['result'];
   self.language = language;
+  if (typeof language === 'string') self.language = Languages[language];
   self.answers = new AnswerSet(answers || {}, self);
   self.actionViewPairs = {};
   self.templates = templates;
