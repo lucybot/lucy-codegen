@@ -26,6 +26,20 @@ App.build = function(input, lucy, callback) {
     shift: Utils.shift,
   }
 
+  files.push({
+    filename: 'package.json',
+    contents: JSON.stringify({
+      "main": "server.js",
+      "dependencies": {
+        "body-parser": "^1.15.0",
+        "busboy": "^0.2.12",
+        "ejs": "^2.4.1",
+        "express": "^4.13.4",
+        "request": "^2.69.0"
+      }
+    }, null, 2)
+  })
+
   var serverFile = {
     filename: 'server.js',
     contents: EJS.render(App.templates.server, ejsInput),
