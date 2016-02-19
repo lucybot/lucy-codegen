@@ -26,17 +26,22 @@ App.build = function(input, lucy, callback) {
     shift: Utils.shift,
   }
 
+  var dependencies = {
+    "body-parser": "^1.15.0",
+    "busboy": "^0.2.12",
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
+    "request": "^2.69.0"
+  };
+  (input.dependencies || []).forEach(function(dep) {
+    dependencies[dep] = '*';
+  })
+
   files.push({
     filename: 'package.json',
     contents: JSON.stringify({
       "main": "server.js",
-      "dependencies": {
-        "body-parser": "^1.15.0",
-        "busboy": "^0.2.12",
-        "ejs": "^2.4.1",
-        "express": "^4.13.4",
-        "request": "^2.69.0"
-      }
+      "dependencies": dependencies,
     }, null, 2)
   })
 
