@@ -4,7 +4,7 @@ var EJS = require('ejs');
 var Utils = require('../../utils.js');
 
 var App = module.exports = {
-  startServer: function(opts) {return 'node server.js'},
+  startServer: function(opts) {return 'npm install && node server.js'},
   includeView: function(view, options) {
     var code = '';
     if (options.data) {
